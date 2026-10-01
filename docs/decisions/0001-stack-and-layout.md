@@ -24,5 +24,6 @@
 - Expo의 호환성 API도 차단되어 `npx expo install`이 실패했다. 그래서 `expo` 패키지에 들어 있는 SDK 권장 버전(`bundledNativeModules.json`)을 읽어 `npm install`로 설치했다: `expo-sqlite ~57.0.3`, `expo-secure-store ~57.0.4`, `jest-expo ~57.0.5`. `@types/jest`는 jest 29 계열(`^29`)로 맞췄다.
 - 테스트 러너 `jest`는 직접 의존성이 아니라 `jest-expo`의 하위 의존성으로 설치된다. 이후 `jest` 버전을 직접 고정해야 하면 사용자 승인이 필요하다.
 - TypeScript 6은 `@types/*`를 자동 포함하지 않아 `tsconfig.json`에 `"types": ["jest"]`를 추가했다.
+- (2026-10-02) 사용자 승인으로 devDependency `@types/node@^22`를 추가했다. DB 테스트가 `node:sqlite`를 쓰기 때문이며, Node 타입 참조는 `src/db/testing/nodeSqlite.ts`에만 둔다. `react-test-renderer`는 추가하지 않았다.
 - `expo lint`는 eslint가 승인 목록에 없어 설정하지 않았고 `lint` 스크립트를 제거했다.
 - 빈칸 단계별 비율의 중간값(2~4단계)은 Phase 1에서 `0002-cloze-ratio-and-pass-rules.md`로 정했다.

@@ -13,8 +13,8 @@ Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습,
 - 테스트 러너(jest-expo)와 문장 분할·빈칸 생성 빈 테스트 파일(todo 6건)
 - 검증(Phase 0): 타입체크, `npm test`, `npx expo start`(Metro 기동 및 iOS 번들 요청 200), `expo export --platform ios`
 - Phase 1 로직: `splitSentences`, `blankRatio`/`generateCloze`/채점/섞기, `daysUntilExam`, 지문 검증, 교정 편집 함수와 단위 테스트(`npm test`), 빈칸 비율·통과 규칙 결정(docs/decisions/0002)
-- Phase 1 DB: `mobile/src/db/{passages,review}.ts`. Node 내장 SQLite 어댑터로 저장·교정 시 해석 이어받기·삭제 연쇄·통과 기록(MAX)·합성 지문 1~5단계 통과를 실행 검증(임시 파일, 커밋하지 않음)
-- Phase 2 로직·DB: `lib/settings`, `lib/vocab`, `lib/subject.ts`, `db/vocab.ts`, `setReviewLevel` 단위 테스트(`npm test` 총 49건) 및 Node SQLite 어댑터 실행 검증(vocab 등록·중복 처리·삭제 연쇄·카드 단계)
+- Phase 1 DB: `mobile/src/db/{passages,sentences,review}.ts`. 저장·교정 시 해석 이어받기·삭제 연쇄·통과 기록(MAX)은 `src/db/__tests__/`의 테스트(Node 내장 SQLite 어댑터 `db/testing/nodeSqlite.ts`)로 검증
+- Phase 2 로직·DB: `lib/settings`, `lib/vocab`, `lib/subject.ts`, `db/vocab.ts`, `setReviewLevel` 단위 테스트(vocab 등록·중복 처리·삭제 연쇄·카드 단계는 `db/__tests__/vocab.test.ts`)
 - Phase 2 화면 코드: 단어장 탭, 단어 카드 복습, 설정, 홈 D-day, 지문 상세(단어 눌러 등록, 해석·메모 입력). `expo export --platform ios` 번들 성공, 실기기 미확인
 - Phase 1 화면 코드: 지문 목록, 지문 등록(붙여넣기→문장 교정→저장), 지문 상세, 문장 교정, 암기 지문 선택, 암기(방식·단계 선택). `expo export --platform ios` 번들 성공. 순수 컴포넌트(ClozeView, SentenceEditor, SentenceBlock의 디바운스 저장·언마운트 저장)는 임시 렌더 테스트로 확인(커밋하지 않음). 타입 라우트(`.expo/types`)를 생성한 상태에서 `tsc` 통과
 
@@ -31,7 +31,11 @@ Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습,
 
 ## Blockers
 
-- None
+Phase 3(지문 채우기)을 시작하려면 사용자가 해결해야 하는 외부 조건(2026-10-02 조사). 코드로 풀 수 없는 것만 적음.
+
+1. **앱을 iPhone에서 실제로 실행**: 개발 서버(`npx expo start`)를 iPhone이 닿는 컴퓨터에서 돌려야 함(이 클라우드 환경은 iPhone이 접속할 수 없음). 필요: Node `^20.19.4 || ^22.13.0 || ^24.3.0`(react-native 0.86 요구, 확인함), 저장소 가져오기(PR #1 병합 또는 `claude/hopeful-mccarthy-k7n4gi` 체크아웃), `cd mobile && npm install`, iPhone과 같은 네트워크(또는 터널). 미확인: App Store의 Expo Go가 이 프로젝트의 SDK 57을 지원하는지, 서버를 꺼도 앱을 쓸 수 있는지(Expo Go는 개발 서버에서 번들을 받는 방식으로 알고 있으나 확인하지 못함).
+2. **Phase 1·2 실기기 확인과 샘플 검증**: 아직 아무도 iPhone에서 앱을 열어 보지 않음. 문제가 있으면 Phase 3 입력 전에 고쳐야 함.
+3. **지문 원문**: 교과서 1·2과와 2025 고2 9월 학평 18~45번의 본문은 저장소에 넣을 수 없어(공개 저장소, 콘텐츠 정책) 사용자가 기기에서 직접 붙여넣어야 함.
 
 ## Open Questions
 
@@ -40,11 +44,14 @@ Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습,
 - **JEV 인증 방식**: 알 수 없음(헤더 키, Bearer 토큰 등 미확인).
 - **JEV 응답 형식**: 알 수 없음. 현재 `JevSentenceResult`(index, ko, vocab[])는 가정한 앱 내부 타입이며 JEV 응답 형식이 아님.
 - **빈칸 단계별 비율**: 선형(27.5/45/62.5%)으로 정함(docs/decisions/0002). 실제로 써 보고 어려우면 조정.
+- **문장 분할과 학평 표지(발견, 미수정)**: `①②③` 표지 뒤에서는 문장이 나뉘지 않아(마침표 뒤 다음 글자가 영문 대문자·숫자가 아니면 나누지 않는 규칙) `. ① The next…`가 한 문장으로 남고, 각주(`* word: 뜻`)도 앞 문장에 붙음. 학평 29·30·31~35·38·39번 등에서 나타날 수 있음. 교정 화면에서 손으로 나눌 수는 있으나 번거로우므로 Phase 3 전에 고치는 것이 좋음(사용자 결정 필요).
 - **린트**: eslint가 승인 목록에 없어 미설정. 필요하면 사용자에게 추가 의존성 승인 요청.
 - **jest**: `jest-expo`의 하위 의존성으로만 설치됨(직접 의존성 아님). 버전을 고정해야 하면 사용자 승인 필요.
 - **실기기 동작**: 웹 시뮬레이션 검증은 했으나 iPhone Expo Go는 미확인. 웹으로 확인할 수 없는 것: 네이티브 `expo-sqlite`/`kv-store` 동작, `Alert.alert` 대화상자(웹에서는 동작하지 않아 지문 삭제 확인창과 입력 오류 안내를 확인하지 못함), 터치·키보드 동작, iOS 레이아웃. 웹 검증 중 `SharedArrayBuffer` 헤더가 없으면 `kv-store` 쓰기가 실패했으나 iOS와는 무관한 웹 제한.
 
 ## Recent Changes
+
+- 2026-10-02: 사용자 승인(`@types/node`만)으로 devDependency `@types/node@^22` 추가(이미 jest 하위 의존성으로 26 버전이 설치돼 있었고 Node 22에 맞춰 직접 의존성으로 고정). `src/db/__tests__/`에 DB 테스트 22건과 `src/db/testing/nodeSqlite.ts` 어댑터를 커밋(전체 75건). Node 타입 참조는 어댑터 파일에만 둠. 코드를 일부러 깨뜨려(삭제 연쇄 누락, MAX 제거, 해석 이어받기 제거) 테스트가 실패함을 확인. `react-test-renderer`·컴포넌트 렌더 테스트는 추가하지 않음(승인 없음, 사용 중단 예고 때문에 보류). 한계: 어댑터는 `expo-sqlite` 네이티브와 같지 않으므로 실기기 검증을 대체하지 않음. `node:sqlite`는 실험 기능이라 실행 시 경고가 나옴.
 
 - 2026-10-02: 동작 보존 리팩터링. (1) `lib/cloze`를 generate·grade·ratio·words·hints·order로 나누고 시드 난수·토큰 분리를 `lib/random.ts`·`lib/text.ts`로 이동(vocab이 cloze를 가져오던 역방향 의존 제거), (2) 1~5 단계 타입을 `lib/level.ts`의 `Level` 하나로 통일, (3) `practice/[id].tsx`(316줄)를 `components/practice/`로 분리, (4) 공통 `TextField`와 `components/dialogs.ts`로 입력칸 스타일·알림창 중복 제거, (5) `db/passages.ts`에서 `db/sentences.ts`·`db/util.ts` 분리, (6) 기본 과목 상수화, 미사용 `Placeholder` 삭제, (7) PROJECT.md 코드 구조 갱신. 시드 고정 출력(빈칸·섞기·카드 순서) 전후 동일 확인, 웹 하니스 36개 항목 재통과. 오류 알림 문구는 `Error: ` 접두어 없이 메시지만 표시(경미한 변경).
 
