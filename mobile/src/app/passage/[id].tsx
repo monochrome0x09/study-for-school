@@ -127,7 +127,8 @@ export default function PassageDetailScreen() {
         </SectionTitle>
         {sentences.map((s) => (
           <SentenceBlock
-            key={s.id}
+            // 교정 저장 시 문장 id가 재사용될 수 있어, 문장이 바뀌면 입력 상태를 새로 만든다
+            key={`${s.id}:${s.en}`}
             sentence={s}
             knownWords={knownWords}
             withTranslation={withTranslation}

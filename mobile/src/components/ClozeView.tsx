@@ -52,7 +52,7 @@ export function ClozeView({ cloze, mode, revealed, inputs, onInput, results }: P
                       <TextInput
                         style={[
                           styles.input,
-                          { minWidth: Math.max(44, blank.answer.length * 11 + 16) },
+                          { width: Math.max(44, blank.answer.length * 11 + 16) },
                           graded === true && { borderColor: colors.good },
                           graded === false && { borderColor: colors.bad },
                         ]}
