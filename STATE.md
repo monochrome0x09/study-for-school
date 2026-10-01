@@ -43,6 +43,8 @@
 - 2026-10-01: Chery 분석(docs/research/chery-analysis.md)의 수치는 README.md의 기록을 옮긴 것이며 이 세션에서 원문을 재확인하지 못함.
 - 2026-10-01: git 저장소는 이미 초기화되어 있어 `git init`은 하지 않았고, 커밋도 하지 않음(요청대로).
 
+- 2026-10-01: PLAN.md를 세부 작업 체크리스트와 단계별 완료 기준(README.md 기준)으로 구체화하고, PROJECT.md에 학습 흐름·콘텐츠 정책·확장 여지를 보강. 진도 표시는 Phase 3의 선택 항목으로 둠.
+
 ## Last Updated
 
 2026-10-01
