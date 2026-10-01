@@ -1,0 +1,26 @@
+# dependencies
+node_modules/
+
+# Expo / build output
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+/ios
+/android
+
+# environment / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.jks
+*.mobileprovision
+
+# misc
+.DS_Store
+*.log
+*.tsbuildinfo
