@@ -53,8 +53,9 @@ export function splitToken(token: string): TokenParts {
   return { prefix: m?.[1] ?? "", core: m?.[2] ?? token, suffix: m?.[3] ?? "" };
 }
 
+/** 글자가 둘 이상인 단어만 빈칸 후보다. (A)·(B) 같은 표지와 a, I는 빈칸으로 쓸모가 없다. */
 function isBlankable(core: string): boolean {
-  return /\p{L}/u.test(core);
+  return /\p{L}/u.test(core) && Array.from(core).length >= 2;
 }
 
 function isContentWord(core: string): boolean {

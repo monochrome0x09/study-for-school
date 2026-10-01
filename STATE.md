@@ -14,9 +14,9 @@ Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습,
 - 검증(Phase 0): 타입체크, `npm test`, `npx expo start`(Metro 기동 및 iOS 번들 요청 200), `expo export --platform ios`
 - Phase 1 로직: `splitSentences`, `blankRatio`/`generateCloze`/채점/섞기, `daysUntilExam`, 지문 검증, 교정 편집 함수와 단위 테스트(`npm test`), 빈칸 비율·통과 규칙 결정(docs/decisions/0002)
 - Phase 1 DB: `mobile/src/db/{passages,review}.ts`. Node 내장 SQLite 어댑터로 저장·교정 시 해석 이어받기·삭제 연쇄·통과 기록(MAX)·합성 지문 1~5단계 통과를 실행 검증(임시 파일, 커밋하지 않음)
-- Phase 2 로직·DB: `lib/settings`, `lib/vocab`, `lib/subject.ts`, `db/vocab.ts`, `setReviewLevel` 단위 테스트(`npm test` 총 48건) 및 Node SQLite 어댑터 실행 검증(vocab 등록·중복 처리·삭제 연쇄·카드 단계)
+- Phase 2 로직·DB: `lib/settings`, `lib/vocab`, `lib/subject.ts`, `db/vocab.ts`, `setReviewLevel` 단위 테스트(`npm test` 총 49건) 및 Node SQLite 어댑터 실행 검증(vocab 등록·중복 처리·삭제 연쇄·카드 단계)
 - Phase 2 화면 코드: 단어장 탭, 단어 카드 복습, 설정, 홈 D-day, 지문 상세(단어 눌러 등록, 해석·메모 입력). `expo export --platform ios` 번들 성공, 실기기 미확인
-- Phase 1 화면 코드: 지문 목록, 지문 등록(붙여넣기→문장 교정→저장), 지문 상세, 문장 교정, 암기 지문 선택, 암기(방식·단계 선택). `expo export --platform ios` 번들 성공. 순수 컴포넌트(ClozeView, SentenceEditor)는 임시 렌더 테스트로 렌더링 확인(커밋하지 않음)
+- Phase 1 화면 코드: 지문 목록, 지문 등록(붙여넣기→문장 교정→저장), 지문 상세, 문장 교정, 암기 지문 선택, 암기(방식·단계 선택). `expo export --platform ios` 번들 성공. 순수 컴포넌트(ClozeView, SentenceEditor, SentenceBlock의 디바운스 저장·언마운트 저장)는 임시 렌더 테스트로 확인(커밋하지 않음). 타입 라우트(`.expo/types`)를 생성한 상태에서 `tsc` 통과
 
 ## In Progress
 
@@ -46,6 +46,7 @@ Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습,
 
 ## Recent Changes
 
+- 2026-10-01: 빈칸 후보에서 한 글자 토큰((A)·(B) 표지, a, I) 제외(docs/decisions/0002 반영). 학평 지문의 각주 풀이(`* word: 뜻`)는 문장으로 나뉘므로 교정 화면에서 삭제해야 함.
 - 2026-10-01: Phase 2 구현(JEV 제외): 단어장, 단어 카드 복습, 설정(kv-store), 홈 D-day, 해석·메모 직접 입력, 영어 전용 기능 제어. `lib/ai/jev.ts`와 JEV 관련 항목은 그대로 두고 PLAN에 "보류"로 표시. 새 의존성 없음.
 - 2026-10-01: Phase 1 구현(로직·DB·화면). 사용자 지시로 JEV API 키·주소 관련 작업은 제외. 실기기와 샘플 검증은 미실시. 새 의존성 추가 없음.
 

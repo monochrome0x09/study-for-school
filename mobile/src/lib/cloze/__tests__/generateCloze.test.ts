@@ -43,10 +43,10 @@ describe("generateCloze", () => {
     for (let i = 1; i < counts.length; i++) {
       expect(counts[i]).toBeGreaterThan(counts[i - 1]);
     }
-    const words = generateCloze(SENTENCES, 1, "p1").reduce(
-      (n, s) => n + s.tokens.length,
-      0,
-    );
+    // 빈칸 후보는 글자 둘 이상인 단어(여기서는 "a" 두 개 제외)
+    const words = SENTENCES.join(" ")
+      .split(/\s+/)
+      .filter((t) => Array.from(splitToken(t).core).length >= 2).length;
     expect(counts[0]).toBe(Math.round(words * 0.1));
     expect(counts[4]).toBe(Math.round(words * 0.8));
   });
@@ -95,6 +95,16 @@ describe("generateCloze", () => {
         expect(b.answer).toMatch(/^[\p{L}\p{N}]/u);
       }
     }
+  });
+
+  test("(A)·(B) 표지와 한 글자 단어는 빈칸으로 만들지 않는다", () => {
+    const c = generateCloze(["(A) I saw a bird, (B) then left."], 5, "x");
+    const answers = c[0].blanks.map((b) => b.answer);
+    expect(answers).not.toContain("A");
+    expect(answers).not.toContain("B");
+    expect(answers).not.toContain("I");
+    expect(answers).not.toContain("a");
+    expect(answers.length).toBeGreaterThan(0);
   });
 
   test("빈 입력이나 단어 없는 입력은 빈칸이 없다", () => {
