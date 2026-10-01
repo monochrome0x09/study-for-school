@@ -47,7 +47,7 @@ export default function PassageEditScreen() {
       ) : (
         <>
           <Text style={styles.help}>
-            영어 문장을 고치면 그 문장의 해석·메모는 비워집니다. 문장을 바꾸지 않으면 유지됩니다.
+            문장을 고치면 그 문장에 붙은 해석·메모는 비워집니다. 문장을 바꾸지 않으면 유지됩니다.
           </Text>
           <SentenceEditor sentences={sentences} onChange={setSentences} />
           <View style={{ height: 12 }} />

@@ -39,20 +39,22 @@ AI 결과의 캐시는 별도 테이블을 만들지 않고 `sentence.ko`, `sent
 - **스택**: Expo(React Native) + TypeScript, expo-router, expo-sqlite, 서버 없음. 코드는 `mobile/`에 둡니다. 근거: `docs/decisions/0001-stack-and-layout.md`.
 - **문장 분할**: 규칙 기반(마침표, 약어 예외) + 사용자 교정. (`mobile/src/lib/sentences/`)
 - **빈칸 생성**: 단계별 빈칸 비율은 1단계 10% → 5단계 80%이고 중간값과 통과 규칙은 `docs/decisions/0002-cloze-ratio-and-pass-rules.md`에 있습니다. 내용어를 우선하고, 지문별 고정 시드로 같은 지문은 같은 빈칸이 나옵니다. (`mobile/src/lib/cloze/`)
+- **설정 저장**: 교과서·시험 범위·시험일은 테이블이 아니라 `expo-sqlite/kv-store`에 저장합니다. 근거: `docs/decisions/0003-settings-storage.md`.
 - **복습 일정**: 시험일 기준 7일 전·3일 전·1일 전(시험일 10/15 → 10/8, 10/12, 10/14). (`mobile/src/lib/review/`)
-- **AI 호출**: 코드는 파일 하나(`mobile/src/lib/ai/jev.ts`)에 모읍니다. 설정 화면에서 주소와 키를 입력받고, 키는 기기에만 저장(expo-secure-store)합니다. 결과는 SQLite에 캐시합니다. JEV의 실제 주소·인증 방식·응답 형식은 아직 확인되지 않았습니다(`STATE.md` 열린 질문).
+- **AI 호출**: 코드는 파일 하나(`mobile/src/lib/ai/jev.ts`)에 모읍니다. 설정 화면에서 주소와 키를 입력받고, 키는 기기에만 저장(expo-secure-store)합니다. 결과는 SQLite에 캐시합니다. JEV의 실제 주소·인증 방식·응답 형식은 아직 확인되지 않았고, 저장소가 공개라는 이유로 연결 작업은 사용자 요청에 따라 보류 중입니다(`STATE.md` 열린 질문). 그동안 문장 해석·메모는 직접 입력합니다.
 - **과목 확장 여지**: 화면 문구에 '영어'를 하드코딩하지 않습니다. 영어 전용 기능(문장 해석, 단어장)은 `passage.subject`가 영어일 때만 노출합니다. 한국사 등 암기 과목은 지금 구현하지 않고 구조만 막지 않습니다.
 
 ## 4. 화면
 
 | 화면 | 라우트 파일 |
 | --- | --- |
-| 홈 | `mobile/src/app/(tabs)/index.tsx` (placeholder) |
+| 홈(D-day, 지문·통과 현황) | `mobile/src/app/(tabs)/index.tsx` |
 | 지문 목록 | `mobile/src/app/(tabs)/passages.tsx` |
 | 지문 등록(붙여넣기 → 문장 교정 → 저장) | `mobile/src/app/passage-new.tsx` |
-| 지문 상세 | `mobile/src/app/passage/[id].tsx` |
+| 지문 상세(문장, 단어 눌러 등록, 해석·메모 직접 입력) | `mobile/src/app/passage/[id].tsx` |
 | 문장 교정(저장된 지문) | `mobile/src/app/passage-edit/[id].tsx` |
 | 암기 지문 선택 | `mobile/src/app/(tabs)/memorize.tsx` |
 | 암기(방식·단계 선택 후 진행) | `mobile/src/app/practice/[id].tsx` |
-| 단어장 | `mobile/src/app/(tabs)/vocab.tsx` (placeholder) |
-| 설정 | `mobile/src/app/(tabs)/settings.tsx` (placeholder) |
+| 단어장(목록·수정·삭제) | `mobile/src/app/(tabs)/vocab.tsx` |
+| 단어 카드 복습 | `mobile/src/app/vocab-review/index.tsx` |
+| 설정(교과서·범위·시험일. JEV 항목은 보류) | `mobile/src/app/(tabs)/settings.tsx` |

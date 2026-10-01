@@ -38,3 +38,22 @@ export async function recordPass(
     nextDue === undefined ? 0 : 1,
   );
 }
+
+/**
+ * 단계를 그대로 덮어쓴다(낮출 수 있음). 단어 카드 복습처럼 모르면 1단계로
+ * 돌아가는 경우에 쓴다. 지문 통과 기록에는 `recordPass`를 쓴다.
+ */
+export async function setReviewLevel(
+  db: SQLiteDatabase,
+  itemType: ReviewItemType,
+  itemId: number,
+  level: ReviewRow["level"],
+): Promise<void> {
+  await db.runAsync(
+    `INSERT INTO review (item_type, item_id, level) VALUES (?, ?, ?)
+     ON CONFLICT(item_type, item_id) DO UPDATE SET level = excluded.level`,
+    itemType,
+    itemId,
+    level,
+  );
+}
