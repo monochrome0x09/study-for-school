@@ -46,6 +46,8 @@ Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습,
 
 ## Recent Changes
 
+- 2026-10-02: 동작 보존 리팩터링. (1) `lib/cloze`를 generate·grade·ratio·words·hints·order로 나누고 시드 난수·토큰 분리를 `lib/random.ts`·`lib/text.ts`로 이동(vocab이 cloze를 가져오던 역방향 의존 제거), (2) 1~5 단계 타입을 `lib/level.ts`의 `Level` 하나로 통일, (3) `practice/[id].tsx`(316줄)를 `components/practice/`로 분리, (4) 공통 `TextField`와 `components/dialogs.ts`로 입력칸 스타일·알림창 중복 제거, (5) `db/passages.ts`에서 `db/sentences.ts`·`db/util.ts` 분리, (6) 기본 과목 상수화, 미사용 `Placeholder` 삭제, (7) PROJECT.md 코드 구조 갱신. 시드 고정 출력(빈칸·섞기·카드 순서) 전후 동일 확인, 웹 하니스 36개 항목 재통과. 오류 알림 문구는 `Error: ` 접두어 없이 메시지만 표시(경미한 변경).
+
 - 2026-10-02: 실기기 대신 웹 빌드(react-native-web + expo-sqlite의 wa-sqlite, Chromium, iPhone 크기·KST)로 화면 흐름을 Playwright로 실제 조작해 검증(임시 설정, 커밋하지 않음). 28+7개 항목 통과(지문 등록·문장 합치기·교정, 타이핑 1~5단계 통과 기록, 힌트 없음·첫글자 자기확인, 문장 순서 정오 판정, 단어 등록·카드 복습, 해석 입력 후 새로고침 유지, 설정 변경 후 D-day, 목록 5단계 표시), 콘솔 오류 0건. 이 과정에서 두 가지를 고침: 타이핑 입력칸 너비를 `minWidth`→`width`로(웹에서 과도하게 넓어짐), 문장 교정 후 지문 상세에 이전 해석이 남던 문제(문장 id 재사용 → `SentenceBlock` key에 문장 내용 포함).
 
 - 2026-10-01: 빈칸 후보에서 한 글자 토큰((A)·(B) 표지, a, I) 제외(docs/decisions/0002 반영). 학평 지문의 각주 풀이(`* word: 뜻`)는 문장으로 나뉘므로 교정 화면에서 삭제해야 함.

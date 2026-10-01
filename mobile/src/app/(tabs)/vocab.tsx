@@ -1,17 +1,10 @@
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useCallback, useState } from "react";
-import {
-  Alert,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
-import { Button, Row, colors } from "@/components/ui";
+import { alertSaveFailed, confirmDelete } from "@/components/dialogs";
+import { Button, Row, TextField, colors } from "@/components/ui";
 import { deleteVocab, listVocab, updateVocab, type VocabListItem } from "@/db/vocab";
 import { useFocusLoad } from "@/hooks/useFocusLoad";
 
@@ -38,25 +31,18 @@ export default function VocabScreen() {
       setEditing(null);
       await reload();
     } catch (e) {
-      Alert.alert("저장하지 못했습니다", e instanceof Error ? e.message : String(e));
+      alertSaveFailed(e);
     }
   };
 
   const remove = () => {
     if (!editing) return;
     const target = editing;
-    Alert.alert("단어를 삭제합니다", target.word, [
-      { text: "취소", style: "cancel" },
-      {
-        text: "삭제",
-        style: "destructive",
-        onPress: async () => {
-          await deleteVocab(db, target.id);
-          setEditing(null);
-          await reload();
-        },
-      },
-    ]);
+    confirmDelete("단어를 삭제합니다", target.word, async () => {
+      await deleteVocab(db, target.id);
+      setEditing(null);
+      await reload();
+    });
   };
 
   const items = data ?? [];
@@ -73,8 +59,8 @@ export default function VocabScreen() {
 
       {editing ? (
         <View style={styles.editor}>
-          <TextInput style={styles.input} value={word} onChangeText={setWord} autoCapitalize="none" autoCorrect={false} />
-          <TextInput style={styles.input} value={meaning} onChangeText={setMeaning} placeholder="뜻" />
+          <TextField value={word} onChangeText={setWord} autoCapitalize="none" autoCorrect={false} />
+          <TextField value={meaning} onChangeText={setMeaning} placeholder="뜻" />
           <Row>
             <Button label="저장" onPress={save} />
             <Button label="삭제" variant="secondary" onPress={remove} />
@@ -110,14 +96,6 @@ const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: colors.bg },
   error: { color: colors.bad, padding: 16 },
   editor: { padding: 12, gap: 8, borderBottomWidth: 1, borderBottomColor: colors.line },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
-    color: colors.text,
-  },
   item: {
     flexDirection: "row",
     alignItems: "center",

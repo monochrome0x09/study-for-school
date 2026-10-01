@@ -1,11 +1,11 @@
-import { seededShuffle, splitToken } from "@/lib/cloze";
-
-export type VocabLevel = 1 | 2 | 3 | 4 | 5;
+import { clampLevel, type Level } from "@/lib/level";
+import { seededShuffle } from "@/lib/random";
+import { splitToken } from "@/lib/text";
 
 /** 카드 복습 결과에 따른 새 단계: 알면 한 단계 위(최대 5), 모르면 1단계로. */
-export function nextVocabLevel(current: number | null, known: boolean): VocabLevel {
+export function nextVocabLevel(current: number | null, known: boolean): Level {
   if (!known) return 1;
-  return Math.min(5, Math.max(1, (current ?? 0) + 1)) as VocabLevel;
+  return clampLevel((current ?? 0) + 1);
 }
 
 /**

@@ -2,25 +2,20 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useCallback, useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 
 import { SentenceBlock } from "@/components/SentenceBlock";
-import { Button, Row, SectionTitle, colors } from "@/components/ui";
-import {
-  deletePassage,
-  getPassage,
-  getSentences,
-  updateSentenceNotes,
-} from "@/db/passages";
+import { alertSaveFailed, confirmDelete } from "@/components/dialogs";
+import { Button, Row, SectionTitle, TextField, colors } from "@/components/ui";
+import { deletePassage, getPassage } from "@/db/passages";
 import { getReview } from "@/db/review";
+import { getSentences, updateSentenceNotes } from "@/db/sentences";
 import { listVocab, upsertVocab } from "@/db/vocab";
 import { useFocusLoad } from "@/hooks/useFocusLoad";
 import { passageTitle } from "@/lib/passage";
@@ -49,18 +44,11 @@ export default function PassageDetailScreen() {
   }, [db, passageId]);
   const { data, error, reload } = useFocusLoad(load);
 
-  const confirmDelete = () =>
-    Alert.alert("지문을 삭제합니다", "문장과 암기 기록도 함께 삭제됩니다.", [
-      { text: "취소", style: "cancel" },
-      {
-        text: "삭제",
-        style: "destructive",
-        onPress: async () => {
-          await deletePassage(db, passageId);
-          router.back();
-        },
-      },
-    ]);
+  const askDelete = () =>
+    confirmDelete("지문을 삭제합니다", "문장과 암기 기록도 함께 삭제됩니다.", async () => {
+      await deletePassage(db, passageId);
+      router.back();
+    });
 
   const pick = (w: string, sentenceId: number) => {
     setPicked({ word: w, sentenceId });
@@ -81,7 +69,7 @@ export default function PassageDetailScreen() {
       setPicked(null);
       await reload();
     } catch (e) {
-      Alert.alert("저장하지 못했습니다", e instanceof Error ? e.message : String(e));
+      alertSaveFailed(e);
     }
   };
 
@@ -89,7 +77,7 @@ export default function PassageDetailScreen() {
     try {
       await updateSentenceNotes(db, sentenceId, ko, note);
     } catch (e) {
-      Alert.alert("저장하지 못했습니다", String(e));
+      alertSaveFailed(e);
     }
   };
 
@@ -119,7 +107,7 @@ export default function PassageDetailScreen() {
             variant="secondary"
             onPress={() => router.push({ pathname: "/passage-edit/[id]", params: { id } })}
           />
-          <Button label="삭제" variant="secondary" onPress={confirmDelete} />
+          <Button label="삭제" variant="secondary" onPress={askDelete} />
         </Row>
 
         <SectionTitle>
@@ -140,9 +128,8 @@ export default function PassageDetailScreen() {
 
       {picked ? (
         <View style={styles.panel}>
-          <TextInput style={styles.panelInput} value={word} onChangeText={setWord} autoCapitalize="none" autoCorrect={false} />
-          <TextInput
-            style={styles.panelInput}
+          <TextField value={word} onChangeText={setWord} autoCapitalize="none" autoCorrect={false} />
+          <TextField
             placeholder="뜻"
             value={meaning}
             onChangeText={setMeaning}
@@ -169,13 +156,5 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.line,
     backgroundColor: colors.bg,
-  },
-  panelInput: {
-    borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
-    color: colors.text,
   },
 });

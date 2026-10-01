@@ -1,11 +1,13 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { SentenceEditor } from "@/components/SentenceEditor";
+import { alertNoSentences, alertSaveFailed } from "@/components/dialogs";
 import { Button, Row, colors } from "@/components/ui";
-import { getSentences, replaceSentences } from "@/db/passages";
+import { getSentences, replaceSentences } from "@/db/sentences";
+import { nonBlank } from "@/lib/sentences/edit";
 
 export default function PassageEditScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -26,16 +28,16 @@ export default function PassageEditScreen() {
 
   const save = async () => {
     if (!sentences) return;
-    const kept = sentences.filter((s) => s.trim().length > 0);
+    const kept = nonBlank(sentences);
     if (kept.length === 0) {
-      Alert.alert("문장이 없습니다", "저장할 문장이 하나도 없습니다.");
+      alertNoSentences();
       return;
     }
     try {
       await replaceSentences(db, passageId, kept.map((en) => ({ en })));
       router.back();
     } catch (e) {
-      Alert.alert("저장하지 못했습니다", String(e));
+      alertSaveFailed(e);
     }
   };
 

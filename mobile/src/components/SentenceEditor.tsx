@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import {
   mergeWithNext,
@@ -8,7 +8,7 @@ import {
   updateAt,
 } from "@/lib/sentences/edit";
 
-import { Button, Row, colors } from "./ui";
+import { Button, Row, TextField, colors } from "./ui";
 
 type Props = {
   sentences: string[];
@@ -27,7 +27,7 @@ export function SentenceEditor({ sentences, onChange }: Props) {
       {sentences.map((text, i) => (
         <View key={i} style={styles.item}>
           <Text style={styles.index}>{i + 1}</Text>
-          <TextInput
+          <TextField
             style={styles.input}
             multiline
             value={text}
@@ -79,14 +79,6 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   index: { color: colors.sub, fontSize: 12 },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
-    minHeight: 44,
-    color: colors.text,
-  },
+  input: { minHeight: 44 },
   notice: { color: colors.bad, marginBottom: 6 },
 });

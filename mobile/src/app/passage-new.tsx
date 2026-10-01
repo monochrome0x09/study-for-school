@@ -2,22 +2,22 @@ import { Stack, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 
 import { SentenceEditor } from "@/components/SentenceEditor";
-import { Button, Chip, Row, SectionTitle, colors } from "@/components/ui";
+import { alertInvalidInput, alertNoSentences, alertSaveFailed } from "@/components/dialogs";
+import { Button, Chip, Row, SectionTitle, TextField, colors } from "@/components/ui";
 import { insertPassage } from "@/db/passages";
 import type { Track } from "@/db/types";
 import { validatePassageInput, type PassageInput } from "@/lib/passage";
 import { splitSentences } from "@/lib/sentences";
+import { nonBlank } from "@/lib/sentences/edit";
 
 const toInt = (s: string): number | null => {
   const t = s.trim();
@@ -52,7 +52,7 @@ export default function PassageNewScreen() {
   const goCorrect = () => {
     const errors = validatePassageInput(buildInput());
     if (errors.length > 0) {
-      Alert.alert("입력을 확인하십시오", errors.join("\n"));
+      alertInvalidInput(errors);
       return;
     }
     setSentences(splitSentences(body));
@@ -60,9 +60,9 @@ export default function PassageNewScreen() {
 
   const save = async () => {
     if (!sentences || saving) return;
-    const kept = sentences.filter((s) => s.trim().length > 0);
+    const kept = nonBlank(sentences);
     if (kept.length === 0) {
-      Alert.alert("문장이 없습니다", "저장할 문장이 하나도 없습니다.");
+      alertNoSentences();
       return;
     }
     setSaving(true);
@@ -74,7 +74,7 @@ export default function PassageNewScreen() {
       );
       router.replace({ pathname: "/passage/[id]", params: { id: String(id) } });
     } catch (e) {
-      Alert.alert("저장하지 못했습니다", String(e));
+      alertSaveFailed(e);
       setSaving(false);
     }
   };
@@ -100,22 +100,22 @@ export default function PassageNewScreen() {
             {track === "교과서" ? (
               <>
                 <SectionTitle>출처</SectionTitle>
-                <TextInput style={styles.input} placeholder="교과서 이름(선택)" value={book} onChangeText={setBook} />
-                <TextInput style={styles.input} placeholder="단원 (예: 1과)" value={unit} onChangeText={setUnit} />
+                <TextField style={styles.input} placeholder="교과서 이름(선택)" value={book} onChangeText={setBook} />
+                <TextField style={styles.input} placeholder="단원 (예: 1과)" value={unit} onChangeText={setUnit} />
               </>
             ) : (
               <>
                 <SectionTitle>출처</SectionTitle>
                 <Row>
-                  <TextInput style={[styles.input, styles.short]} placeholder="연도" keyboardType="number-pad" value={year} onChangeText={setYear} />
-                  <TextInput style={[styles.input, styles.short]} placeholder="월" keyboardType="number-pad" value={month} onChangeText={setMonth} />
-                  <TextInput style={[styles.input, styles.short]} placeholder="번호" keyboardType="number-pad" value={number} onChangeText={setNumber} />
+                  <TextField style={[styles.input, styles.short]} placeholder="연도" keyboardType="number-pad" value={year} onChangeText={setYear} />
+                  <TextField style={[styles.input, styles.short]} placeholder="월" keyboardType="number-pad" value={month} onChangeText={setMonth} />
+                  <TextField style={[styles.input, styles.short]} placeholder="번호" keyboardType="number-pad" value={number} onChangeText={setNumber} />
                 </Row>
               </>
             )}
 
             <SectionTitle>본문 (붙여넣기)</SectionTitle>
-            <TextInput
+            <TextField
               style={[styles.input, styles.body]}
               multiline
               placeholder="지문 텍스트를 붙여넣으십시오"
@@ -147,15 +147,7 @@ export default function PassageNewScreen() {
 
 const styles = StyleSheet.create({
   content: { padding: 16, paddingBottom: 48 },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
-    color: colors.text,
-    marginBottom: 8,
-  },
+  input: { marginBottom: 8 },
   short: { minWidth: 90 },
   body: { minHeight: 220 },
   help: { color: colors.sub, marginBottom: 8 },

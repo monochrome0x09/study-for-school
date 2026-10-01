@@ -1,3 +1,5 @@
+import type { Level } from "@/lib/level";
+
 /** DB 행 타입. 스키마는 db/migrations.ts가 정본이고 설명은 docs/spec.md. */
 
 export type Track = "교과서" | "학평";
@@ -52,7 +54,7 @@ export type ReviewRow = {
   id: number;
   item_type: ReviewItemType;
   item_id: number;
-  level: 1 | 2 | 3 | 4 | 5;
+  level: Level;
   /** ISO 날짜(YYYY-MM-DD) */
   next_due: string | null;
 };

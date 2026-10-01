@@ -1,5 +1,4 @@
 import {
-  CLOZE_LEVELS,
   blankKey,
   gradeBlanks,
   shuffledOrder,
@@ -8,9 +7,9 @@ import {
   generateCloze,
   isAnswerCorrect,
   normalizeAnswer,
-  seededShuffle,
-  splitToken,
 } from "../index";
+import { LEVELS } from "@/lib/level";
+import { splitToken } from "@/lib/text";
 
 // 테스트용으로 직접 쓴 문장. 실제 지문이 아니다.
 const SENTENCES = [
@@ -29,9 +28,9 @@ describe("blankRatio", () => {
   test("1단계 10%, 5단계 80%이고 단계가 오를수록 커진다", () => {
     expect(blankRatio(1)).toBeCloseTo(0.1);
     expect(blankRatio(5)).toBeCloseTo(0.8);
-    for (let i = 1; i < CLOZE_LEVELS.length; i++) {
-      expect(blankRatio(CLOZE_LEVELS[i])).toBeGreaterThan(
-        blankRatio(CLOZE_LEVELS[i - 1]),
+    for (let i = 1; i < LEVELS.length; i++) {
+      expect(blankRatio(LEVELS[i])).toBeGreaterThan(
+        blankRatio(LEVELS[i - 1]),
       );
     }
   });
@@ -39,7 +38,7 @@ describe("blankRatio", () => {
 
 describe("generateCloze", () => {
   test("단계가 높을수록 빈칸이 늘어난다 (1단계 10% → 5단계 80%)", () => {
-    const counts = CLOZE_LEVELS.map((l) => count(l));
+    const counts = LEVELS.map((l) => count(l));
     for (let i = 1; i < counts.length; i++) {
       expect(counts[i]).toBeGreaterThan(counts[i - 1]);
     }
@@ -113,17 +112,6 @@ describe("generateCloze", () => {
   });
 });
 
-describe("splitToken", () => {
-  test("앞뒤 문장부호를 떼고 단어 안 ' 와 - 는 유지한다", () => {
-    expect(splitToken('"well-known,')).toEqual({
-      prefix: '"',
-      core: "well-known",
-      suffix: ",",
-    });
-    expect(splitToken("It's")).toEqual({ prefix: "", core: "It's", suffix: "" });
-  });
-});
-
 describe("답 비교", () => {
   test("대소문자·곡선 따옴표·앞뒤 문장부호·공백을 무시한다", () => {
     expect(normalizeAnswer("  Won’t, ")).toBe("won't");
@@ -135,15 +123,6 @@ describe("답 비교", () => {
 
   test("첫글자 힌트", () => {
     expect(firstLetterHint("garden")).toBe("g_____");
-  });
-});
-
-describe("seededShuffle", () => {
-  test("같은 seed면 같은 순서이고 원본은 그대로다", () => {
-    const src = [1, 2, 3, 4, 5, 6];
-    expect(seededShuffle(src, "a")).toEqual(seededShuffle(src, "a"));
-    expect([...seededShuffle(src, "a")].sort()).toEqual(src);
-    expect(src).toEqual([1, 2, 3, 4, 5, 6]);
   });
 });
 

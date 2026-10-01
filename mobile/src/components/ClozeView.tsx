@@ -4,18 +4,18 @@ import {
   blankKey,
   blankMask,
   firstLetterHint,
-  splitToken,
   type BlankKey,
-  type ClozeMode,
+  type BlankMode,
   type ClozeSentence,
 } from "@/lib/cloze";
+import { splitToken } from "@/lib/text";
 
 import { colors } from "./ui";
 
 type Props = {
   cloze: ClozeSentence[];
   /** "order"는 이 화면에서 쓰지 않는다. */
-  mode: Exclude<ClozeMode, "order">;
+  mode: BlankMode;
   /** true면 빈칸에 정답을 보여 준다. */
   revealed: boolean;
   inputs: Partial<Record<BlankKey, string>>;

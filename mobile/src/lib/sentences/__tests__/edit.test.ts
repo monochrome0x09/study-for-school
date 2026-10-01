@@ -1,4 +1,4 @@
-import { mergeWithNext, removeAt, splitAt, updateAt } from "../edit";
+import { mergeWithNext, nonBlank, removeAt, splitAt, updateAt } from "../edit";
 
 const list = ["First one.", "Second one.", "Third."];
 
@@ -17,4 +17,8 @@ test("삭제·수정하고 원본은 그대로다", () => {
   expect(removeAt(list, 1)).toEqual(["First one.", "Third."]);
   expect(updateAt(list, 2, "Third!")).toEqual(["First one.", "Second one.", "Third!"]);
   expect(list).toEqual(["First one.", "Second one.", "Third."]);
+});
+
+test("비어 있는 문장은 버린다", () => {
+  expect(nonBlank(["a", "  ", "", "b"])).toEqual(["a", "b"]);
 });

@@ -1,5 +1,7 @@
 import type { SQLiteDatabase } from "expo-sqlite";
 
+import type { Level } from "@/lib/level";
+
 import type { ReviewItemType, ReviewRow } from "./types";
 
 export async function getReview(
@@ -22,7 +24,7 @@ export async function recordPass(
   db: SQLiteDatabase,
   itemType: ReviewItemType,
   itemId: number,
-  level: ReviewRow["level"],
+  level: Level,
   nextDue?: string | null,
 ): Promise<void> {
   await db.runAsync(
@@ -47,7 +49,7 @@ export async function setReviewLevel(
   db: SQLiteDatabase,
   itemType: ReviewItemType,
   itemId: number,
-  level: ReviewRow["level"],
+  level: Level,
 ): Promise<void> {
   await db.runAsync(
     `INSERT INTO review (item_type, item_id, level) VALUES (?, ?, ?)

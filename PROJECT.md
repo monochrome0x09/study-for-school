@@ -83,12 +83,23 @@
 docs/                  정본·근거 (spec.md, research/, decisions/, templates/)
 outputs/               최종 산출물 (앱 코드 아님)
 mobile/                Expo 앱 (코드는 전부 여기)
-  src/app/             expo-router 화면 (홈·지문 목록·지문 등록·암기·단어장·설정)
-  src/db/              스키마와 마이그레이션
-  src/lib/sentences/   문장 분할
-  src/lib/cloze/       빈칸 생성
-  src/lib/review/      복습 일정
-  src/lib/ai/jev.ts    JEV API 호출 (한 파일)
+  src/app/             expo-router 화면(라우트 파일은 얇게: 데이터 읽기 + 컴포넌트 조립)
+  src/components/      화면 부품. ui.tsx(Button·Chip·TextField), dialogs.ts(알림창 문구),
+                       practice/(암기 설정·진행), SentenceEditor, SentenceBlock, ClozeView 등
+  src/hooks/           useFocusLoad (화면 포커스 시 다시 읽기)
+  src/db/              SQLite. migrations(스키마), types(행 타입),
+                       passages·sentences·vocab·review(접근 함수, SQL은 여기에만)
+  src/lib/             화면·DB와 무관한 순수 로직(단위 테스트 대상)
+    sentences/         문장 분할(index), 교정 편집 함수(edit)
+    cloze/             빈칸 암기: generate·grade·ratio·words·hints·order, index가 한 곳으로 내보냄
+    review/            시험일 계산(복습 일정은 Phase 3)
+    vocab/ passage/ settings/   단어 카드 단계·순서 / 지문 검증·이름·시드 / 설정 형식과 D-day
+    level.ts random.ts text.ts  공통: 1~5 단계 타입, 시드 난수, 토큰 분리
+    subject.ts errors.ts        과목별 기능 노출 판단, 오류 문구
+    ai/jev.ts          JEV API 호출 (한 파일, 연결은 보류 중)
+
+의존 방향: app → components → lib / db. lib는 app·components를 가져오지 않고,
+db는 lib의 공통 타입(level, passage 입력 타입, subject)만 가져온다.
 ```
 
 ### Git Conventions

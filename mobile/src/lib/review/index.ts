@@ -1,6 +1,5 @@
 import type { ReviewItemType } from "@/db/types";
-
-export type ReviewLevel = 1 | 2 | 3 | 4 | 5;
+import type { Level } from "@/lib/level";
 
 /** 시험일 기준 복습 시점(며칠 전). 시험일 10/15 → 10/8, 10/12, 10/14. */
 export const REVIEW_DAYS_BEFORE_EXAM = [7, 3, 1] as const;
@@ -8,7 +7,7 @@ export const REVIEW_DAYS_BEFORE_EXAM = [7, 3, 1] as const;
 export type ReviewState = {
   itemType: ReviewItemType;
   itemId: number;
-  level: ReviewLevel;
+  level: Level;
   /** ISO 날짜(YYYY-MM-DD) */
   nextDue: string | null;
 };

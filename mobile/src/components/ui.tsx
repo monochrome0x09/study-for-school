@@ -3,8 +3,10 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
   View,
   type StyleProp,
+  type TextInputProps,
   type ViewStyle,
 } from "react-native";
 
@@ -88,6 +90,16 @@ export function Chip({ label, selected, disabled, onPress }: ChipProps) {
   );
 }
 
+type TextFieldProps = TextInputProps & {
+  /** 문장 아래에 붙는 작은 입력칸(해석·메모)용 */
+  compact?: boolean;
+};
+
+/** 앱 공통 텍스트 입력칸. 추가 스타일(marginBottom, minHeight 등)은 style로 넘긴다. */
+export function TextField({ compact, style, ...props }: TextFieldProps) {
+  return <TextInput style={[styles.field, compact && styles.fieldCompact, style]} {...props} />;
+}
+
 export function Row({ children }: { children: ReactNode }) {
   return <View style={styles.row}>{children}</View>;
 }
@@ -119,6 +131,15 @@ const styles = StyleSheet.create({
   },
   chipSelected: { backgroundColor: colors.primary },
   chipLabel: { fontSize: 15, color: colors.text },
+  field: {
+    borderWidth: 1,
+    borderColor: colors.line,
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 16,
+    color: colors.text,
+  },
+  fieldCompact: { paddingVertical: 6, paddingHorizontal: 10, fontSize: 15 },
   row: { flexDirection: "row", flexWrap: "wrap", gap: 8, alignItems: "center" },
   sectionTitle: {
     fontSize: 14,

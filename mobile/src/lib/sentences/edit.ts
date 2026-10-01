@@ -32,3 +32,8 @@ export function updateAt(
 ): string[] {
   return list.map((s, idx) => (idx === i ? text : s));
 }
+
+/** 비어 있지 않은 문장만 남긴다(저장 전 정리). */
+export function nonBlank(list: readonly string[]): string[] {
+  return list.filter((s) => s.trim().length > 0);
+}

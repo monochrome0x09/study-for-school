@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import type { SentenceRow } from "@/db/types";
 import { wordFromToken } from "@/lib/vocab";
 
-import { colors } from "./ui";
+import { TextField, colors } from "./ui";
 
 type Props = {
   sentence: SentenceRow;
@@ -73,16 +73,16 @@ export function SentenceBlock({
       </Text>
       {withTranslation ? (
         <>
-          <TextInput
-            style={styles.input}
+          <TextField
+            compact
             placeholder="해석 (직접 입력)"
             multiline
             value={ko}
             onChangeText={(t) => change({ ko: t, note })}
             onBlur={flush}
           />
-          <TextInput
-            style={styles.input}
+          <TextField
+            compact
             placeholder="메모"
             multiline
             value={note}
@@ -106,13 +106,4 @@ const styles = StyleSheet.create({
   en: { fontSize: 17, lineHeight: 27, color: colors.text },
   num: { color: colors.sub, fontSize: 12 },
   known: { textDecorationLine: "underline", color: colors.primary },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 8,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    fontSize: 15,
-    color: colors.text,
-  },
 });

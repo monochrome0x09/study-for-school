@@ -1,6 +1,8 @@
 import type { SQLiteDatabase } from "expo-sqlite";
 
-import type { ReviewRow, VocabRow } from "./types";
+import type { Level } from "@/lib/level";
+
+import type { VocabRow } from "./types";
 
 export type VocabInput = {
   word: string;
@@ -11,7 +13,7 @@ export type VocabInput = {
 
 export type VocabListItem = VocabRow & {
   /** 카드 복습에서 쌓은 단계(1~5). 아직 복습하지 않았으면 null. */
-  level: ReviewRow["level"] | null;
+  level: Level | null;
 };
 
 /**
