@@ -14,7 +14,9 @@ if (!file) {
 
 const doc = JSON.parse(readFileSync(file, "utf8"));
 const errors = [];
+const warnings = [];
 const err = (where, msg) => errors.push(`${where}: ${msg}`);
+const warn = (where, msg) => warnings.push(`${where}: ${msg}`);
 
 if (doc.schema_version !== 1) err("root", "schema_version은 1이어야 합니다");
 if (!doc.source || typeof doc.source !== "object") err("root", "source가 없습니다");
@@ -48,7 +50,10 @@ for (const p of doc.passages ?? []) {
   if (numbers.has(p.number)) err(w, "번호가 중복되었습니다");
   numbers.add(p.number);
   if (typeof p.english !== "string" || p.english.trim() === "") err(w, "english가 비어 있습니다");
-  else if (/[①-⑳]/.test(p.english)) err(w, "english에 원문자 번호가 있습니다(손필기가 섞였을 수 있음). 인쇄된 표지라면 무시하십시오");
+  else if (/[①-⑳]/.test(p.english) && !p.printed_markers) {
+    // 어법·삽입 문항처럼 원문자가 인쇄된 지문은 정상이다. 손필기가 새어 들어간 경우와 구분하도록 경고만 한다.
+    warn(w, 'english에 원문자 번호가 있습니다. 인쇄된 표지라면 passage에 "printed_markers": true를 적고, 손필기가 섞인 것이라면 고치십시오');
+  }
 
   // sentences: en을 공백으로 이으면 english와 같아야 하고, ko_indices가 해석 문장을 빠짐없이 한 번씩 덮어야 한다
   if (!Array.isArray(p.sentences) || p.sentences.length === 0) err(w, "sentences가 비어 있습니다");
@@ -97,6 +102,7 @@ for (const p of doc.passages ?? []) {
 }
 
 console.log(`지문 ${doc.passages?.length ?? 0}개, 손필기 ${annotationTotal}개(낮은 신뢰도 ${lowTotal}개)`);
+for (const x of warnings) console.warn(`경고 - ${x}`);
 if (errors.length > 0) {
   console.error(`검증 실패 ${errors.length}건:`);
   for (const e of errors) console.error(`- ${e}`);

@@ -32,6 +32,7 @@ node docs/sources/tools/render-extraction.mjs   docs/sources/private/extracted/<
     "printed_title": "...",       // 스캔에 인쇄된 제목 그대로
     "page_notes": [{ "text": "", "placement": "", "confidence": "high|medium|low", "related_anchor": "" }],
     "english": "...",             // 인쇄된 영문 본문만. 손필기를 섞지 않는다
+    "printed_markers": false,     // 본문에 ①~⑤가 인쇄되어 있으면(어법·삽입 문항 등) true. 아니면 검증기가 원문자를 경고함
     "italics": ["..."],           // 인쇄에서 기울임체인 구절(본문에는 서식 없이 포함)
     "footnotes": [{ "marker": "*", "term": "", "gloss": "" }],
     "annotations": [{             // 손필기 한 건당 하나
@@ -54,6 +55,7 @@ node docs/sources/tools/render-extraction.mjs   docs/sources/private/extracted/<
 
 - `kind` 의미: `vocab` 어휘 뜻, `grammar` 문법 용어·기호(S, V, P.P, = which 등), `chunk-slash` 끊어 읽기 사선, `underline` 밑줄, `circle` 동그라미, `arrow` 화살표·연결선, `bracket` 괄호로 묶은 범위, `insertion` 생략 복원(^ 와 괄호 글), `other` 그 밖.
 - `sentences[].en`은 `lib/sentences`의 `splitSentences(english)` 결과여야 합니다(앱에 등록할 때 문장 번호가 같아지도록). 영어 문장 수와 해석 문장 수가 다르면(콜론·세미콜론으로 이어진 문장 등) 억지로 합치지 말고 `ko_indices`에 여러 개를 적어 짝을 지정합니다.
+- `korean_sentences`는 이렇게 나눴습니다: `.`·`?`·`!`와 닫는 따옴표·괄호(`’ ” ) ]`) 뒤 공백에서 나누되, 닫는 큰따옴표(`”`) 바로 뒤에 한글이 오면(예: `…일이에요?” 그녀가 물었다.` 같은 말하는 이 표현) 나누지 않습니다. 영어 문장 수와 맞지 않는 지문은 아래 `ko_indices`를 손으로 지정합니다. 예: 영어 문장 하나가 콜론이나 세미콜론으로 이어져 해석이 둘로 나뉜 경우 `[[0],[1],[2],[3],[4,5],[6],[7]]`처럼 해당 영어 문장에 해석 인덱스 둘을 묶습니다.
 - 연도처럼 스캔에 없는 값은 만들지 않고 `null`로 둡니다.
 
 ## 추출 절차
