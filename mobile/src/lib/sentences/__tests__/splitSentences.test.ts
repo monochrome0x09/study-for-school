@@ -80,4 +80,49 @@ describe("splitSentences", () => {
       splitSentences("See Fig. Two shows it.", { abbreviations: ["Fig."] }),
     ).toEqual(["See Fig. Two shows it."]);
   });
+
+  test("원문자 번호(①②③…)로 시작하는 문장도 나눈다", () => {
+    expect(
+      splitSentences("He left early. ① The next day was calm. ② Nobody came. ③ Then it rained."),
+    ).toEqual([
+      "He left early.",
+      "① The next day was calm.",
+      "② Nobody came.",
+      "③ Then it rained.",
+    ]);
+  });
+
+  test("문장 중간의 원문자 번호는 나누지 않는다", () => {
+    expect(splitSentences("The tomatoes ① growing beside the fence ② are ripe. Done.")).toEqual([
+      "The tomatoes ① growing beside the fence ② are ripe.",
+      "Done.",
+    ]);
+  });
+
+  test("*로 시작하는 줄(각주)은 앞 문장에 붙지 않고 따로 나뉜다", () => {
+    expect(splitSentences("He studied hard.\n\n* gloss: 뜻풀이 목록")).toEqual([
+      "He studied hard.",
+      "* gloss: 뜻풀이 목록",
+    ]);
+    expect(splitSentences("It ended.\n* one: 하나\n* two: 둘")).toEqual([
+      "It ended.",
+      "* one: 하나",
+      "* two: 둘",
+    ]);
+  });
+
+  test("본문 중간에 *가 있어도 줄이 *로 시작하지 않으면 일반 문장이다", () => {
+    expect(splitSentences("She said that* was odd. Then left.")).toEqual([
+      "She said that* was odd.",
+      "Then left.",
+    ]);
+  });
+
+  test("각주가 있어도 앞쪽 본문은 이어진 줄을 합친다", () => {
+    expect(splitSentences("The line wraps\nacross two rows. Next one.\n* note: 설명")).toEqual([
+      "The line wraps across two rows.",
+      "Next one.",
+      "* note: 설명",
+    ]);
+  });
 });

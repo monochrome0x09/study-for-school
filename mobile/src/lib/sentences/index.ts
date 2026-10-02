@@ -31,9 +31,31 @@ function endsSentence(token: string): boolean {
   return /[.?!]$/.test(token.replace(CLOSERS, ""));
 }
 
+// 문장 시작이 될 수 있는 글자: 영문 대문자, 숫자, 원문자 번호(①~⑳, 학평 지문의 보기 표지)
+const SENTENCE_START = /[A-Z0-9\u2460-\u2473]/;
+
 function startsSentence(token: string): boolean {
   const first = token.replace(OPENERS, "").charAt(0);
-  return /[A-Z0-9]/.test(first);
+  return SENTENCE_START.test(first);
+}
+
+/**
+ * 줄이 *로 시작하면 각주로 보고 새 덩어리를 시작한다. 각주는 앞 문장과 합쳐지지 않고
+ * 따로 나뉘며, 지울지는 교정 화면에서 사용자가 정한다. 그 밖의 줄바꿈은 같은 덩어리 안에서
+ * 공백으로 이어 붙는다.
+ */
+function splitBlocks(text: string): string[] {
+  const blocks: string[] = [];
+  let current: string[] = [];
+  for (const line of text.split(/\r?\n/)) {
+    if (/^\s*\*/.test(line) && current.length > 0) {
+      blocks.push(current.join(" "));
+      current = [];
+    }
+    current.push(line);
+  }
+  blocks.push(current.join(" "));
+  return blocks;
 }
 
 /**
@@ -41,7 +63,8 @@ function startsSentence(token: string): boolean {
  * 결과는 사용자가 교정 화면에서 고친다.
  *
  * 마침표·물음표·느낌표(뒤에 닫는 따옴표·괄호가 올 수 있음) 다음 단어가
- * 대문자나 숫자로 시작할 때만 나눈다. 줄바꿈과 연속 공백은 공백 하나로 합친다.
+ * 대문자, 숫자, 원문자 번호(①~⑳)로 시작할 때만 나눈다. 원문자 표지는 지우지 않고 문장에 남긴다.
+ * 줄바꿈과 연속 공백은 공백 하나로 합치되, `*`로 시작하는 줄(각주)은 따로 나눈다.
  */
 export function splitSentences(
   text: string,
@@ -53,7 +76,11 @@ export function splitSentences(
     ),
   );
 
-  const tokens = text.split(/\s+/).filter((t) => t.length > 0);
+  return splitBlocks(text).flatMap((block) => splitBlock(block, abbreviations));
+}
+
+function splitBlock(block: string, abbreviations: ReadonlySet<string>): string[] {
+  const tokens = block.split(/\s+/).filter((t) => t.length > 0);
   const sentences: string[] = [];
   let current: string[] = [];
 

@@ -69,7 +69,7 @@
 | --- | --- |
 | 설치 | `npm install` |
 | 실행 | `npx expo start` (iPhone의 Expo Go로 접속) |
-| 테스트 | `npm test` |
+| 테스트 | `npm test` (DB 테스트가 `node:sqlite`를 쓰므로 Node 22.13 이상 권장, 이 환경은 22.22로 확인. 그보다 낮은 버전은 확인하지 못함) |
 | 타입체크 | `npm run typecheck` |
 | 린트/포맷 | TBD (eslint 미설정) |
 | 빌드 | 없음 (Expo Go 사용, 배포하지 않음) |
