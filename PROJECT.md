@@ -81,7 +81,7 @@
 ```
 /                      문서 구조(AGENTS.md, PROJECT/TASK/STATE/PLAN/CHECKLIST.md)
 docs/                  정본·근거 (spec.md, research/, decisions/, templates/)
-  docs/sources/       사용자가 준 원자료. 실제 파일은 private/(git 제외), README만 추적
+  docs/sources/       사용자가 준 원자료. 실제 파일과 추출 결과는 private/(git 제외), README·FORMAT.md·tools/만 추적
 outputs/               최종 산출물 (앱 코드 아님)
 mobile/                Expo 앱 (코드는 전부 여기)
   src/app/             expo-router 화면(라우트 파일은 얇게: 데이터 읽기 + 컴포넌트 조립)
