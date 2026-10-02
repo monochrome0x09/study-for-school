@@ -74,3 +74,25 @@ node docs/sources/tools/render-extraction.mjs   docs/sources/private/extracted/<
 - 판독은 AI가 사진을 읽은 것이라 손필기(특히 작은 글씨·흐린 글씨)는 틀릴 수 있습니다. 영문 본문은 두 번 읽어 일치했지만 두 판독이 완전히 독립적이지는 않습니다.
 - 해석(한국어)은 한 번만 읽었고 문장 대응으로 영문과 내용이 맞는지만 확인했습니다.
 - 앱에는 이 JSON을 읽어 들이는 기능이 아직 없습니다. 지금은 `txt/`의 영문을 지문 등록 화면에 붙여넣고 해석·메모를 직접 입력해야 합니다. JSON을 붙여넣어 지문·해석·메모를 한 번에 등록하는 "일괄 가져오기" 화면은 제안만 한 상태입니다.
+
+## 교과서 추출(`private/textbook/`)
+
+스캔 PDF 대신 Google Drive의 텍스트 변환본으로 만든 인쇄체 본문 추출입니다. 스키마(`version: 1`):
+
+```jsonc
+{
+  "source": { "title", "origin", "coverage", "page_offset", "reliability", "status" },
+  "passages": [{
+    "id": "L1-read-01",           // L<과>-<read|culture>-<번호>
+    "lesson": 1, "title": "...", "kind": "reading|culture",
+    "pdf_page": 8, "printed_page": 15,   // 인쇄 쪽 = PDF 쪽 + 7
+    "english": "...",             // 줄 번호(5·10·15)와 줄 바꿈을 지운 본문. 각주 표지 *는 그대로
+    "footnotes": ["*pertussis ..."]
+  }],
+  "page_vocab_lists": { "8": ["deadly", "..."] },   // 쪽 아래 어휘 목록(뜻 없음)
+  "handwriting_ocr_raw": { "8": "..." }             // 손글씨 자동 인식 원문. 대부분 깨져 있어 판독본이 아님
+}
+```
+
+- `txt/<id>.txt`는 지문 등록 화면에 붙여넣는 형태입니다(`*` 각주는 별도 줄).
+- 손글씨 주석(`annotations`)과 해석(`korean`)은 아직 없습니다. 쪽 이미지를 읽어야 하며 변환본으로는 안 됩니다.
