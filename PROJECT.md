@@ -89,11 +89,12 @@ mobile/                Expo 앱 (코드는 전부 여기)
                        practice/(암기 설정·진행), SentenceEditor, SentenceBlock, ClozeView 등
   src/hooks/           useFocusLoad (화면 포커스 시 다시 읽기)
   src/db/              SQLite. migrations(스키마), types(행 타입),
-                       passages·sentences·vocab·review(접근 함수, SQL은 여기에만)
+                       passages·sentences·vocab·review·importer(접근 함수, SQL은 여기에만)
   src/lib/             화면·DB와 무관한 순수 로직(단위 테스트 대상)
     sentences/         문장 분할(index), 교정 편집 함수(edit)
     cloze/             빈칸 암기: generate·grade·ratio·words·hints·order, index가 한 곳으로 내보냄
-    review/            시험일 계산(복습 일정은 Phase 3)
+    review/            시험일 D-day, 복습 일정(시험 7·3·1일 전)과 홈 문구
+    importer/          일괄 가져오기 묶음(JSON) 검증·읽기
     vocab/ passage/ settings/   단어 카드 단계·순서 / 지문 검증·이름·시드 / 설정 형식과 D-day
     level.ts random.ts text.ts  공통: 1~5 단계 타입, 시드 난수, 토큰 분리
     subject.ts errors.ts        과목별 기능 노출 판단, 오류 문구

@@ -18,6 +18,7 @@ export default function PassagesScreen() {
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <View style={{ padding: 16 }}>
         <Button label="지문 등록" onPress={() => router.push("/passage-new")} />
+        <Button label="JSON으로 한꺼번에 가져오기" variant="secondary" onPress={() => router.push("/import")} style={{ marginTop: 8 }} />
       </View>
       {error ? <Text style={{ color: colors.bad, padding: 16 }}>{error}</Text> : null}
       <PassageList
