@@ -2,7 +2,7 @@
 
 ## Current Status
 
-Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습, 교과서·시험 설정, 홈 D-day, 해석·메모 직접 입력)이 구현되었고, 사용자가 iPhone Expo Go 실기기 검증을 마쳤다고 보고했습니다(2026-10-02, 세부 항목은 기록되지 않음). 이 환경에서는 실기기를 확인할 수 없어 사용자 보고를 그대로 따릅니다. JEV(API 키) 관련 작업은 공개 저장소라는 이유로 보류 중입니다. 다음 단계는 Phase 3(지문 채우기)이며, 교과서 1·2과 본문 텍스트와 학평 12지문 추출본이 로컬(`docs/sources/private/`)에 준비되어 있습니다.
+Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습, 교과서·시험 설정, 홈 D-day, 해석·메모 직접 입력)이 구현되었고, 사용자가 iPhone Expo Go 실기기 검증을 마쳤다고 보고했습니다(2026-10-02, 세부 항목은 기록되지 않음). 이 환경에서는 실기기를 확인할 수 없어 사용자 보고를 그대로 따릅니다. JEV(API 키) 관련 작업은 공개 저장소라는 이유로 보류 중입니다. Phase 3(지문 채우기)의 만들 수 있는 코드(복습 일정, 홈 표시, 일괄 가져오기)는 구현을 마쳤고 실기기 확인 전입니다. 교과서 1·2과 본문과 학평 12지문의 가져오기 묶음이 로컬(`docs/sources/private/import/`)에 준비되어 있습니다.
 
 ## Completed
 
@@ -16,6 +16,7 @@ Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습,
 - Phase 1 DB: `mobile/src/db/{passages,sentences,review}.ts`. 저장·교정 시 해석 이어받기·삭제 연쇄·통과 기록(MAX)은 `src/db/__tests__/`의 테스트(Node 내장 SQLite 어댑터 `db/testing/nodeSqlite.ts`)로 검증
 - Phase 2 로직·DB: `lib/settings`, `lib/vocab`, `lib/subject.ts`, `db/vocab.ts`, `setReviewLevel` 단위 테스트(vocab 등록·중복 처리·삭제 연쇄·카드 단계는 `db/__tests__/vocab.test.ts`)
 - Phase 2 화면 코드: 단어장 탭, 단어 카드 복습, 설정, 홈 D-day, 지문 상세(단어 눌러 등록, 해석·메모 입력). `expo export --platform ios` 번들 성공, 실기기 미확인
+- Phase 3 코드(2026-10-02): 복습 일정(`reviewDates`·`nextReviewDue`)과 홈 표시, 일괄 가져오기(lib·db·화면·변환 도구). 단위·DB 테스트와 웹 하니스 확인, 실기기 미확인(자세한 내용은 Recent Changes)
 - Phase 1 화면 코드: 지문 목록, 지문 등록(붙여넣기→문장 교정→저장), 지문 상세, 문장 교정, 암기 지문 선택, 암기(방식·단계 선택). `expo export --platform ios` 번들 성공. 순수 컴포넌트(ClozeView, SentenceEditor, SentenceBlock의 디바운스 저장·언마운트 저장)는 임시 렌더 테스트로 확인(커밋하지 않음). 타입 라우트(`.expo/types`)를 생성한 상태에서 `tsc` 통과
 
 ## In Progress
@@ -24,10 +25,10 @@ Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습,
 
 ## Next
 
-1. 교과서 1·2과 지문 등록(사용자): `docs/sources/private/textbook/txt/`의 영문을 지문 등록 화면에 붙여넣기. 클라우드 환경은 비활성 시 회수되므로 사용자가 보관한 zip을 쓰는 편이 안전함
-2. 학평 12지문 등록(사용자): `docs/sources/private/extracted/txt/`
-3. 손글씨·해석 추출 보완: 교과서 PDF 원본(41MB)을 이 환경에서 받지 못했음. 10MB 이하로 쪼갠 PDF를 Google Drive에 두거나 세션에 직접 올려 주면 손글씨와 해석을 쪽 이미지로 읽어 추출 가능
-4. 복습 일정 `reviewDates`·`nextReviewDue`(Phase 3, 10/8 전 완료 목표)와 홈의 다음 복습일 표시
+1. 실기기 확인(사용자): 이번에 추가한 홈의 다음 복습일·남은 지문 수와 일괄 가져오기 화면(붙여넣기 속도 포함)
+2. 가져오기 실행(사용자): 학평 12지문은 `docs/sources/private/import/hakpyeong/`, 교과서 21개는 `.../textbook/`의 JSON을 앱 `지문` 탭의 "JSON으로 한꺼번에 가져오기"에 붙여넣음. 클라우드 환경은 비활성 시 회수되므로 사용자가 받은 zip을 쓰는 편이 안전함
+3. 교과서 손글씨·해석 추출(보류): 원본 PDF를 이 환경에서 받지 못함. 10MB 이하로 쪼갠 PDF를 Google Drive에 두거나 세션에 직접 올려 주면 쪽 이미지로 읽어 추출 가능. 사용자가 본문은 나중으로 미룸
+4. 학평 해석·손필기 검수(사용자): `REVIEW.md`의 낮은 신뢰도 항목
 5. JEV 연결은 사용자 요청으로 보류 중. 재개하려면 공개 저장소에 키가 들어가지 않는 방식(사용자 입력만, 코드·문서에 값 없음)을 정하고 열린 질문 해소
 
 ## Blockers
@@ -48,6 +49,8 @@ Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습,
 - **실기기 동작**: 웹 시뮬레이션 검증은 했으나 iPhone Expo Go는 미확인. 웹으로 확인할 수 없는 것: 네이티브 `expo-sqlite`/`kv-store` 동작, `Alert.alert` 대화상자(웹에서는 동작하지 않아 지문 삭제 확인창과 입력 오류 안내를 확인하지 못함), 터치·키보드 동작, iOS 레이아웃. 웹 검증 중 `SharedArrayBuffer` 헤더가 없으면 `kv-store` 쓰기가 실패했으나 iOS와는 무관한 웹 제한.
 
 ## Recent Changes
+
+- 2026-10-02: 사용자 결정 반영(학평 41~45번 공동 지문 제외, 데이터 내보내기는 만들지 않음, 교과서 손글씨 추출은 나중으로 미룸)과 만들 수 있는 Phase 3 기능 구현. (1) 복습 일정: `lib/review`의 `reviewDates`·`nextReviewDue`·`reviewLabel`(시험일 7·3·1일 전, 복습일 당일이면 그날, 단위 테스트 15건, 일부러 `>=`를 `>`로 바꿔 테스트가 실패함을 확인), 홈에 다음 복습일과 남은 지문 수 표시. 지문별 `review.next_due`는 쓰지 않음. (2) 일괄 가져오기(`docs/decisions/0004-bulk-import.md`): `lib/importer`(묶음 검증, 오류 시 전부 거부), `db/importer.ts`(중복 지문 건너뛰기, 지문별 트랜잭션, 단어를 문장에 연결), `app/import.tsx`와 지문 탭 진입 버튼. `db/passages.ts`에서 `insertPassageRow`를 분리(동작 동일). 테스트는 importer 파서와 DB 합쳐 새로 35건, 일부러 중복 확인을 끄고 실패함을 확인. (3) 변환 도구 `docs/sources/tools/to-import-bundle.mjs`(추출 JSON → 가져오기 묶음, 연도는 `--year`로 직접 받음). 비공개 `private/import/`에 학평 12개(연도 2025는 PLAN의 계획값이며 스캔에 없음, 사용자 확인 필요)와 교과서 21개(문단 단위) 묶음을 만들고 앱의 파서로 전부 오류 0건임을 확인. 웹 하니스(Chromium, iPhone 크기)로 가져오기 흐름 18개 항목(오류 안내, 미리보기, 12개·21개 등록, 재가져오기 시 건너뜀, 상세의 해석·메모, 단어장, 홈 문구)을 조작해 확인, 콘솔 오류 0건. 한계: 실기기 미확인(특히 수십 KB JSON 붙여넣기), 중복 판단은 출처 필드만 봄, 학평 메모는 글자가 있는 손필기만 담고 밑줄·동그라미 등 표시는 넣지 않음.
 
 - 2026-10-02: 교과서(NE능률 영어2 오선영) PDF에서 인쇄체 본문을 추출해 `docs/sources/private/textbook/`에 저장(git 제외). Drive 텍스트 변환본(PDF 1~40쪽 = 인쇄 8~47쪽)에서 읽기 지문 21개(1과 읽기 7·활동 2·문화 4, 2과 읽기 8), 각주, 쪽별 어휘 목록을 줄 범위로 잘라 정리(`textbook-ne-eng2-l1-l2.json`, `txt/` 21개). 변환본의 인쇄체는 깨끗하고 줄 번호·이스케이프를 지웠으며 앱의 `splitSentences`로 나눈 문장 수가 지문을 읽어 센 수와 일치함(각주는 별도 문장). 손글씨는 변환본의 자동 인식이 대부분 깨져 있어 판독본이 아니며 쪽별 원문만 `handwriting-ocr-raw/`에 보관(해석·주석 구조화 안 함). 한계: 사람 검수 전, 인쇄체 중 굵은 큰 제목의 일부 글자는 변환본에서 누락(본문에는 영향 없음), 본문 원본 PDF와 글자 단위 대조는 하지 못함. `docs/sources/README.md`·`FORMAT.md`에 형식과 한계를 기록. 사용자 실기기 검증 완료 보고를 PLAN.md에 반영.
 

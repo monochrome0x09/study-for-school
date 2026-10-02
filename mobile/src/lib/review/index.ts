@@ -51,14 +51,32 @@ export function daysUntilExam(examDate: string, today: string): number {
   return e - t;
 }
 
-/** 시험일 기준 복습 날짜 목록(YYYY-MM-DD, 오름차순). */
-export function reviewDates(examDate: string): string[] {
-  // TODO: 구현
-  throw new Error("reviewDates: not implemented");
+/** YYYY-MM-DD에 일수를 더한다(음수면 뺀다). 형식이 틀리면 null. */
+function addDays(date: string, days: number): string | null {
+  const n = dayNumber(date);
+  if (n === null) return null;
+  return new Date((n + days) * DAY_MS).toISOString().slice(0, 10);
 }
 
-/** 기준일 이후 가장 가까운 복습 날짜. 없으면 null. */
+/** 시험일 기준 복습 날짜 목록(YYYY-MM-DD, 오름차순). 시험일 형식이 틀리면 빈 배열. */
+export function reviewDates(examDate: string): string[] {
+  const dates = REVIEW_DAYS_BEFORE_EXAM.map((d) => addDays(examDate, -d));
+  return dates.every((d): d is string => d !== null) ? [...dates].sort() : [];
+}
+
+/** 기준일(포함) 이후 가장 가까운 복습 날짜. 오늘이 복습일이면 오늘. 없으면 null. */
 export function nextReviewDue(examDate: string, today: string): string | null {
-  // TODO: 구현
-  throw new Error("nextReviewDue: not implemented");
+  if (!isValidDate(today)) return null;
+  // YYYY-MM-DD는 문자열 비교가 날짜 순서와 같다
+  return reviewDates(examDate).find((d) => d >= today) ?? null;
+}
+
+/** 홈 화면용 다음 복습일 문구. 시험일 형식이 틀리면 null. */
+export function reviewLabel(examDate: string, today: string): string | null {
+  if (reviewDates(examDate).length === 0 || !isValidDate(today)) return null;
+  const next = nextReviewDue(examDate, today);
+  if (next === null) return "남은 복습일 없음";
+  const left = daysUntilExam(next, today);
+  const md = `${Number(next.slice(5, 7))}/${Number(next.slice(8, 10))}`;
+  return left === 0 ? `오늘이 복습일입니다 (${md})` : `다음 복습일 ${md} (${left}일 뒤)`;
 }

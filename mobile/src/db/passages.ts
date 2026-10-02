@@ -14,6 +14,29 @@ export type PassageListItem = PassageRow & {
   level: Level | null;
 };
 
+/** 지문 행만 넣는다. 트랜잭션은 호출하는 쪽이 연다. */
+export async function insertPassageRow(
+  db: SQLiteDatabase,
+  input: PassageInput,
+): Promise<number> {
+  const res = await db.runAsync(
+    `INSERT INTO passage
+       (subject, track, source_school, source_book, source_unit,
+        source_year, source_month, source_number, body)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    input.subject ?? DEFAULT_SUBJECT,
+    input.track,
+    nullIfBlank(input.source_school),
+    nullIfBlank(input.source_book),
+    nullIfBlank(input.source_unit),
+    input.source_year ?? null,
+    input.source_month ?? null,
+    input.source_number ?? null,
+    input.body,
+  );
+  return res.lastInsertRowId;
+}
+
 /** 지문과 문장을 한 트랜잭션으로 저장하고 지문 id를 돌려준다. */
 export async function insertPassage(
   db: SQLiteDatabase,
@@ -22,22 +45,7 @@ export async function insertPassage(
 ): Promise<number> {
   let passageId = 0;
   await db.withTransactionAsync(async () => {
-    const res = await db.runAsync(
-      `INSERT INTO passage
-         (subject, track, source_school, source_book, source_unit,
-          source_year, source_month, source_number, body)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      input.subject ?? DEFAULT_SUBJECT,
-      input.track,
-      nullIfBlank(input.source_school),
-      nullIfBlank(input.source_book),
-      nullIfBlank(input.source_unit),
-      input.source_year ?? null,
-      input.source_month ?? null,
-      input.source_number ?? null,
-      input.body,
-    );
-    passageId = res.lastInsertRowId;
+    passageId = await insertPassageRow(db, input);
     await insertSentences(db, passageId, sentences);
   });
   return passageId;
