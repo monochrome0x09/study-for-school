@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+
+# Expo / build output
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+/ios
+/android
+
+# environment / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.jks
+*.mobileprovision
+
+# misc
+.DS_Store
+*.log
+*.tsbuildinfo
+
+# 사용자가 제공한 원자료(시험지·교재 스캔 등). 공개 저장소에 올리지 않는다(PROJECT.md 콘텐츠 정책).
+docs/sources/private/

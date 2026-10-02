@@ -69,7 +69,24 @@
 
 ## Project-Specific Checks
 
-프로젝트별로 필요한 검증 항목을 아래에 추가합니다.
+프로젝트별 검증 항목입니다. 모든 명령은 `mobile/`에서 실행하며, 체크 표시는 마지막으로 직접 검증한 결과입니다(마지막 검증: 2026-10-01, 세팅 작업).
 
-- [ ] 프로젝트별 검증 항목 1
-- [ ] 프로젝트별 검증 항목 2
+### 코드·실행
+
+- [x] 타입체크 통과 (`npm run typecheck`)
+- [x] 테스트 러너 실행 가능 (`npm test`, todo 테스트 6건·실패 0건)
+- [x] 앱 번들 시작 가능 (`npx expo start`가 에러 없이 뜸. 단, root 환경 특성상 React Native DevTools 설치 오류 메시지는 출력되며 앱과 무관)
+- [x] 6개 화면 라우트 파일 존재 (`mobile/src/app/`: 홈, 지문 목록, 지문 등록, 암기, 단어장, 설정) 및 `expo export --platform ios` 번들 성공
+- [x] SQLite 마이그레이션 실행 확인 (실제 `migrations.ts`를 Node 내장 SQLite 어댑터로 실행: 5개 테이블 생성, user_version=1, 재실행 무해, CHECK/UNIQUE/FK 동작)
+- [ ] 실기기 확인: iPhone Expo Go에서 앱이 열리고 6개 화면이 보이며 앱 시작 시 DB 초기화 오류가 없다 (**사용자가 직접 확인**. expo-sqlite 자체는 Node에서 실행할 수 없어 실기기에서만 확인 가능)
+
+### 문서·상태
+
+- [x] md 파일 간 내용 일관성 (PROJECT / docs/spec / README / PLAN의 일정·범위·제외 항목·시험일이 일치)
+- [x] TASK.md / STATE.md / PLAN.md 갱신
+- [x] 임시 파일 제거 (scratchpad 산출물, `.expo` 캐시)
+- [x] 새 외부 의존성이 승인 범위 안 (expo, expo-router, 템플릿 기본 패키지, expo-sqlite, expo-secure-store, typescript, jest-expo, @types/jest)
+
+### 알려진 TODO (의도적)
+
+- `mobile/src/lib/**`의 `TODO: 구현`은 PLAN.md 1~2단계에서 채울 본문입니다. 세팅 작업에서는 미완료 TODO로 세지 않습니다.
