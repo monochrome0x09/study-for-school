@@ -71,7 +71,7 @@ export default function ImportScreen() {
             <View style={{ height: 16 }} />
             <Row>
               <Button label="더 가져오기" variant="secondary" onPress={reset} />
-              <Button label="지문 목록 보기" onPress={() => router.replace("/passages")} />
+              <Button label="지문 목록 보기" onPress={() => router.back()} />
             </Row>
           </>
         ) : (

@@ -164,3 +164,25 @@ describe("shuffledOrder", () => {
     expect(shuffledOrder(1, "s")).toEqual([0]);
   });
 });
+
+describe("각주 표지(*)가 붙은 단어", () => {
+  // 교과서 지문은 각주가 달린 단어 뒤에 *가 붙는다(예: "pertussis*."). 표지는 정답에 들어가면 안 된다.
+  const sentence = "They are on their way to visit children suffering from a deadly disease called pertussis*.";
+
+  test("정답은 단어만이고 표지는 문장부호로 남는다", () => {
+    for (const level of LEVELS) {
+      const [s] = generateCloze([sentence], level, "p1");
+      for (const b of s.blanks) {
+        expect(b.answer).not.toMatch(/[*.]/);
+        expect(splitToken(s.tokens[b.tokenIndex]).core).toBe(b.answer);
+      }
+    }
+    const [s5] = generateCloze([sentence], 5, "p1");
+    const idx = s5.tokens.findIndex((t) => t === "pertussis*.");
+    expect(s5.blanks.find((b) => b.tokenIndex === idx)?.answer).toBe("pertussis");
+  });
+
+  test("타이핑 채점은 단어만 쳐도 맞다고 본다", () => {
+    expect(isAnswerCorrect("pertussis", "pertussis")).toBe(true);
+  });
+});
