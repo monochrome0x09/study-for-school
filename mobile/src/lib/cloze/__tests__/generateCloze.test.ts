@@ -186,3 +186,19 @@ describe("각주 표지(*)가 붙은 단어", () => {
     expect(isAnswerCorrect("pertussis", "pertussis")).toBe(true);
   });
 });
+
+describe("줄표(—)로 이어진 낱말", () => {
+  const sentence = "They are citizen scientists—ordinary people who desire to help advance science.";
+
+  test("정답에 줄표 뒷부분이 섞이지 않고 앞 낱말만 타이핑하면 맞다", () => {
+    for (const level of LEVELS) {
+      const [s] = generateCloze([sentence], level, "p1");
+      for (const b of s.blanks) expect(b.answer).not.toMatch(/[—–]/);
+    }
+    const [s5] = generateCloze([sentence], 5, "p1");
+    const idx = s5.tokens.findIndex((t) => t === "scientists—ordinary");
+    const blank = s5.blanks.find((b) => b.tokenIndex === idx);
+    expect(blank?.answer).toBe("scientists");
+    expect(isAnswerCorrect("scientists", "scientists")).toBe(true);
+  });
+});
