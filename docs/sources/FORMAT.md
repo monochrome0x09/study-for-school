@@ -95,7 +95,7 @@ node docs/sources/tools/render-extraction.mjs   docs/sources/private/extracted/<
 ```
 
 - `txt/<id>.txt`는 지문 등록 화면에 붙여넣는 형태입니다(`*` 각주는 별도 줄).
-- 손글씨 주석(`annotations`)과 해석(`korean`)은 아직 없습니다. 쪽 이미지를 읽어야 하며 변환본으로는 안 됩니다.
+- 손글씨는 `textbook-handwriting.json`에 따로 있습니다(아래). 교과서에는 인쇄된 해석이 없어 `ko`는 만들지 않았습니다.
 
 ## 가져오기 묶음(앱의 일괄 가져오기)
 
@@ -130,3 +130,20 @@ node docs/sources/tools/to-import-bundle.mjs <추출.json> <출력 폴더> --yea
 - `ko`는 해석 문장, `note`는 글자가 있는 손필기를 `어휘 단어: 뜻` 꼴 줄로 모은 것입니다. 낮은 신뢰도 항목은 끝에 `(?)`. 글자가 없는 표시(밑줄·동그라미·끊어 읽기·괄호)는 메모에 넣지 않습니다.
 - `--vocab`: 한글 뜻이 있고 낮은 신뢰도가 아닌 `vocab` 손필기와 각주 풀이를 단어장 항목으로 만듭니다(영어 뜻풀이 `= fatal` 같은 것은 제외).
 - 교과서 텍스트 추출(`private/textbook/`)은 지문 묶는 방식이 사용자 결정이라 도구 없이 한 번 만들었습니다(`import/textbook/`).
+
+### 교과서 손글씨(`private/textbook/textbook-handwriting.json`)
+
+```jsonc
+{ "version": 1, "source": { … },
+  "passages": [{
+    "id": "L2-read-07", "pdf_page": 39, "printed_page": 46,
+    "sentences": ["…"],                       // 앱의 splitSentences 결과(가져오기 묶음과 같은 문장 번호)
+    "annotations": [{ "sentence": 3, "kind": "vocab|grammar|other", "anchor": "…", "text": "…", "confidence": "high|medium|low", "note": "…" }],
+    "sticky": ["본문 구조화", "1. …", "…", "본문 주제", "…"],   // 쪽에 붙은 스티커 메모
+    "sticky_note": null                       // 스티커가 다른 지문과 걸쳐 있는 경우의 설명
+  }] }
+```
+
+- 쪽 PDF를 150dpi로 렌더링해 줄 단위로 잘라 2배로 확대해 읽었습니다. 앵커가 해당 문장에 실제로 있는지 전부 확인했습니다(278개 중 12개를 고침).
+- 가져오기 묶음으로 바꿀 때 `note`는 `어휘 단어: 뜻` 꼴 줄이 되고(낮은 신뢰도는 `(?)`), 스티커 메모는 첫 문장 메모 끝에 `[스티커 메모] …`로 붙습니다. 한글 뜻이 있는 낮은 신뢰도 아닌 어휘는 단어장 항목도 됩니다.
+- 한계: 글자 없는 표시는 담지 않았고, 파란 글씨(어휘)와 빨간 글씨(문법)는 색이 아니라 내용으로 `kind`를 정했습니다. 읽지 못한 글자는 `[판독불가]`입니다.
