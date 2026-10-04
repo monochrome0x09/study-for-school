@@ -25,6 +25,7 @@ Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습,
 
 ## Next
 
+0. 웹앱 올리기(사용자): `mobile/dist` 폴더를 Netlify 또는 Cloudflare Pages에 올려 주소를 받고, iPhone Safari에서 열어 홈 화면에 추가한 뒤 앱 안에서 가져오기 JSON을 붙여넣음. 안 열리거나 데이터가 사라지면 보고(Expo Go로 대체 가능)
 1. 가져오기 실행(사용자): 학평 23개(`docs/sources/private/import/hakpyeong/`의 `batch-*.json` 3개 또는 `all.json`)와 교과서 21개(`.../textbook/`)의 JSON을 앱 `지문` 탭의 "JSON으로 한꺼번에 가져오기"에 붙여넣음. 클라우드 환경은 비활성 시 회수되므로 사용자가 받은 zip을 쓰는 편이 안전함
 2. 실기기 확인(사용자): 홈의 다음 복습일·남은 지문 수, 일괄 가져오기 화면(붙여넣기 속도 포함)
 3. 검수(사용자): 학평 `REVIEW.md`, 교과서 `HANDWRITING-REVIEW.md`의 낮은 신뢰도 항목, 그리고 공식 PDF에서 만든 11개 학평 지문의 AI 분석(어휘·문법 메모)
@@ -44,6 +45,8 @@ Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습,
 - **실기기 동작**: 웹 시뮬레이션 검증은 했으나 iPhone Expo Go는 미확인. 웹으로 확인할 수 없는 것: 네이티브 `expo-sqlite`/`kv-store` 동작, `Alert.alert` 대화상자(웹에서는 동작하지 않아 지문 삭제 확인창과 입력 오류 안내를 확인하지 못함), 터치·키보드 동작, iOS 레이아웃. 웹 검증 중 `SharedArrayBuffer` 헤더가 없으면 `kv-store` 쓰기가 실패했으나 iOS와는 무관한 웹 제한.
 
 ## Recent Changes
+
+- 2026-10-04: 컴퓨터 없이 쓰기 위해 웹앱(PWA) 호스팅 준비(사용자 선택: 컴퓨터는 Windows/Linux, 방식은 홈 화면에 추가). `metro.config.js`(wasm), `app.json` web 설정, `public/`(index.html·manifest·아이콘·`_headers`·`_redirects`), `npm run build:web` 추가, 웹용 알림/삭제 확인(`dialogs.ts`), 저장소 영구화 요청(`_layout.tsx`). 운영 빌드를 같은 헤더의 정적 서버로 띄워 Chromium에서 가져오기·새로고침 유지·타이핑·삭제 확인 통과(콘솔 오류 0건), typecheck·테스트 120건 통과. 빌드 결과에 지문 데이터·키 없음 확인. 한계: iPhone Safari 미확인, 오프라인 불가, 저장소가 Expo Go와 별개(자세한 내용은 `docs/decisions/0006-web-hosting.md`). 호스팅 업로드와 iPhone 설치는 사용자 몫.
 
 - 2026-10-04: 사용자가 iPhone에서 일괄 가져오기에 JSON을 붙여넣은 뒤 키보드가 닫히지 않는다고 보고. 원인: 여러 줄 입력칸의 완료 키가 줄바꿈이라 키보드를 닫는 방법이 화면에 없었음. 수정: 가져오기 화면에 "키보드 닫기" 버튼을 추가하고, "내용 확인"도 키보드를 닫으며, 스크롤 시 닫히도록(`keyboardDismissMode="on-drag"`) 함. 같은 종류의 문제가 있을 수 있는 지문 등록·지문 상세·문장 교정 화면에도 스크롤 시 닫히는 설정만 추가. 웹에서 버튼 표시와 가져오기 흐름은 확인했으나 키보드 동작 자체는 웹에서 확인할 수 없어 iPhone 확인 필요(typecheck, 테스트 120건, iOS 번들 통과).
 

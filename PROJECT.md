@@ -72,7 +72,7 @@
 | 테스트 | `npm test` (DB 테스트가 `node:sqlite`를 쓰므로 Node 22.13 이상 권장, 이 환경은 22.22로 확인. 그보다 낮은 버전은 확인하지 못함) |
 | 타입체크 | `npm run typecheck` |
 | 린트/포맷 | TBD (eslint 미설정) |
-| 빌드 | 없음 (Expo Go 사용, 배포하지 않음) |
+| 빌드 | 앱스토어 배포 없음. 컴퓨터 없이 쓰려면 `npm run build:web` 결과(`mobile/dist`)를 정적 호스팅해 PWA로 사용 (`docs/decisions/0006-web-hosting.md`) |
 
 완료 전 검증에는 위 테스트와 타입체크 명령을 사용합니다.
 
