@@ -20,8 +20,13 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "output": "single",
+      "bundler": "metro",
+      "name": "내신 영어 학습",
+      "shortName": "내신영어",
+      "favicon": "./assets/images/favicon.png",
+      "backgroundColor": "#ffffff",
+      "themeColor": "#2f6fed"
     },
     "plugins": [
       "expo-router",
