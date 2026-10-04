@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { alertSaveFailed } from "@/components/dialogs";
 import { Button, Row, SectionTitle, TextField, colors } from "@/components/ui";
@@ -50,7 +50,11 @@ export default function ImportScreen() {
       style={{ flex: 1, backgroundColor: colors.bg }}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+      >
         {result ? (
           <>
             <SectionTitle>가져오기 결과</SectionTitle>
@@ -90,7 +94,17 @@ export default function ImportScreen() {
               textAlignVertical="top"
             />
             <View style={{ height: 12 }} />
-            <Button label="내용 확인" onPress={() => setParsed(parseImportBundle(text))} />
+            {/* 여러 줄 입력칸의 완료 키는 줄바꿈이라 키보드가 안 닫힌다: 닫기 버튼과 끌어내리기로 닫는다 */}
+            <Row>
+              <Button label="키보드 닫기" variant="secondary" onPress={() => Keyboard.dismiss()} />
+              <Button
+                label="내용 확인"
+                onPress={() => {
+                  Keyboard.dismiss();
+                  setParsed(parseImportBundle(text));
+                }}
+              />
+            </Row>
 
             {parsed && parsed.errors.length > 0 ? (
               <>

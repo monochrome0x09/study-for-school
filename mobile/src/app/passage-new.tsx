@@ -88,6 +88,7 @@ export default function PassageNewScreen() {
       <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
       >
         {sentences === null ? (
           <>

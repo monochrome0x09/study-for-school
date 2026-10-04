@@ -91,7 +91,7 @@ export default function PassageDetailScreen() {
 
   return (
     <KeyboardAvoidingView style={styles.page} behavior={Platform.OS === "ios" ? "padding" : undefined}>
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
         <Stack.Screen options={{ title: passageTitle(passage) }} />
         <Text style={styles.meta}>
           {passage.track} · {sentences.length}문장 ·{" "}

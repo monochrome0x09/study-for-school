@@ -42,7 +42,7 @@ export default function PassageEditScreen() {
   };
 
   return (
-    <ScrollView style={styles.page} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+    <ScrollView style={styles.page} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
       <Stack.Screen options={{ title: "문장 교정" }} />
       {sentences === null ? (
         <Text style={{ color: colors.sub }}>불러오는 중…</Text>
