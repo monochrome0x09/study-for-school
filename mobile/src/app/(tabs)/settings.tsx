@@ -1,4 +1,4 @@
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text } from "react-native";
 
@@ -8,6 +8,7 @@ import { validateSettings } from "@/lib/settings";
 import { loadSettings, saveSettings } from "@/lib/settings/storage";
 
 export default function SettingsScreen() {
+  const router = useRouter();
   const [textbook, setTextbook] = useState("");
   const [scope, setScope] = useState("");
   const [examDate, setExamDate] = useState("");
@@ -60,6 +61,9 @@ export default function SettingsScreen() {
         />
         <Button label="저장" onPress={save} style={{ marginTop: 16 }} />
         {saved ? <Text style={styles.saved}>저장했습니다.</Text> : null}
+
+        <SectionTitle>지문 가져오기</SectionTitle>
+        <Button label="JSON으로 한꺼번에 가져오기" variant="secondary" onPress={() => router.push("/import")} />
       </ScrollView>
     </KeyboardAvoidingView>
   );

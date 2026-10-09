@@ -53,8 +53,8 @@ export function ClozeView({ cloze, mode, revealed, inputs, onInput, results }: P
                         style={[
                           styles.input,
                           { width: Math.max(44, blank.answer.length * 11 + 16) },
-                          graded === true && { borderColor: colors.good },
-                          graded === false && { borderColor: colors.bad },
+                          graded === true && { borderColor: colors.good, borderWidth: 2 },
+                          graded === false && { borderColor: colors.bad, borderStyle: "dashed", borderWidth: 2 },
                         ]}
                         value={inputs[key] ?? ""}
                         onChangeText={(t) => onInput(key, t)}
@@ -99,11 +99,11 @@ const styles = StyleSheet.create({
   word: { fontSize: 17, lineHeight: 26, color: colors.text },
   blankWrap: { flexDirection: "row", alignItems: "center" },
   mask: { color: colors.sub, letterSpacing: 1 },
-  answer: { color: colors.primary, fontWeight: "600" },
+  answer: { color: colors.primary, fontWeight: "700", textDecorationLine: "underline" },
   input: {
     borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 6,
+    borderColor: colors.text,
+    borderRadius: 4,
     paddingVertical: 2,
     paddingHorizontal: 6,
     fontSize: 17,

@@ -1,4 +1,4 @@
-import { passageSeed, passageTitle, validatePassageInput } from "../index";
+import { passageSeed, passageTitle, pickContinue, validatePassageInput } from "../index";
 
 describe("validatePassageInput", () => {
   test("학평은 연도·월·문항 번호(18~45)가 필요하다", () => {
@@ -75,5 +75,27 @@ describe("passageTitle / passageSeed", () => {
     ).toBe("지문 7");
     expect(passageSeed(7)).toBe(passageSeed(7));
     expect(passageSeed(7)).not.toBe(passageSeed(8));
+  });
+});
+
+describe("pickContinue", () => {
+  test("가장 높은 단계까지 간 미완료 지문을 고른다", () => {
+    const items = [
+      { id: 1, level: 5 },
+      { id: 2, level: 2 },
+      { id: 3, level: 4 },
+      { id: 4, level: null },
+    ];
+    expect(pickContinue(items)?.id).toBe(3);
+  });
+
+  test("단계가 같으면 먼저 등록한 것(id가 작은 것)", () => {
+    expect(pickContinue([{ id: 9, level: null }, { id: 4, level: null }, { id: 7, level: null }])?.id).toBe(4);
+    expect(pickContinue([{ id: 8, level: 2 }, { id: 3, level: 2 }])?.id).toBe(3);
+  });
+
+  test("전부 5단계를 통과했거나 지문이 없으면 null", () => {
+    expect(pickContinue([{ id: 1, level: 5 }])).toBeNull();
+    expect(pickContinue([])).toBeNull();
   });
 });
