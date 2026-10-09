@@ -46,6 +46,8 @@ Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습,
 
 ## Recent Changes
 
+- 2026-10-09: 사용자 요청으로 흑백 에디토리얼 디자인(E안, 버튼 라운드)을 앱에 적용(`docs/decisions/0007-bw-editorial-design.md`). 공통 색·서체·버튼(`ui.tsx`), 탭 4개(오늘·지문·단어·더보기)와 암기 탭 숨김, 홈(D-day 큰 서체, 진행 막대, '이어서 암기하기'), 지문 목록(5칸 단계 표시, 전체/학평/교과서 필터), 빈칸 채점 표시(굵은 테두리/점선), 더보기에 가져오기 진입 추가. `pickContinue` 단위 테스트 3건 추가(전체 123건 통과), typecheck 통과, 운영 웹 빌드를 Chromium에서 가져오기→이어서 암기→채점까지 조작해 콘솔 오류 0건 확인. 한계: iPhone Safari·서체 렌더링 미확인(구글 폰트가 이 환경에서 불러와지지 않아 대체 서체로만 확인), '오늘 할 일' 미구현.
+
 - 2026-10-04: 사용자 요청으로 Vercel 호스팅 준비. 이 환경에는 Vercel 인증이 없어 직접 업로드는 못 했고 `mobile/vercel.json`(헤더·rewrite·빌드 설정)을 추가해 사용자가 Vercel에서 GitHub 저장소를 가져오면 되게 함(Root Directory=`mobile`). 배포 결과는 미확인.
 
 - 2026-10-04: 컴퓨터 없이 쓰기 위해 웹앱(PWA) 호스팅 준비(사용자 선택: 컴퓨터는 Windows/Linux, 방식은 홈 화면에 추가). `metro.config.js`(wasm), `app.json` web 설정, `public/`(index.html·manifest·아이콘·`_headers`·`_redirects`), `npm run build:web` 추가, 웹용 알림/삭제 확인(`dialogs.ts`), 저장소 영구화 요청(`_layout.tsx`). 운영 빌드를 같은 헤더의 정적 서버로 띄워 Chromium에서 가져오기·새로고침 유지·타이핑·삭제 확인 통과(콘솔 오류 0건), typecheck·테스트 120건 통과. 빌드 결과에 지문 데이터·키 없음 확인. 한계: iPhone Safari 미확인, 오프라인 불가, 저장소가 Expo Go와 별개(자세한 내용은 `docs/decisions/0006-web-hosting.md`). 호스팅 업로드와 iPhone 설치는 사용자 몫.
@@ -88,4 +90,4 @@ Phase 1(암기 핵심)과 Phase 2의 JEV 제외 부분(단어장, 카드 복습,
 
 ## Last Updated
 
-2026-10-04
+2026-10-09

@@ -77,3 +77,18 @@ export function passageTitle(p: TitleFields): string {
 export function passageSeed(passageId: number): string {
   return `passage-${passageId}`;
 }
+
+/**
+ * '이어서 암기하기'로 열 지문. 5단계를 아직 통과하지 못한 지문 중 가장 높은 단계까지 간 것을 고르고,
+ * 단계가 같으면 먼저 등록한 것(id가 작은 것)을 고른다. 전부 통과했으면 null.
+ */
+export function pickContinue<T extends { id: number; level: number | null }>(items: readonly T[]): T | null {
+  let best: T | null = null;
+  for (const p of items) {
+    const lv = p.level ?? 0;
+    if (lv >= 5) continue;
+    const bestLv = best ? (best.level ?? 0) : -1;
+    if (lv > bestLv || (lv === bestLv && p.id < best!.id)) best = p;
+  }
+  return best;
+}

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import {
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -12,14 +13,26 @@ import {
 
 export const colors = {
   bg: "#ffffff",
-  text: "#111111",
-  sub: "#666666",
-  line: "#dddddd",
-  primary: "#2f6fed",
+  text: "#0b0b0b",
+  sub: "#6e6e6e",
+  line: "#e4e4e4",
+  primary: "#0b0b0b",
   primaryText: "#ffffff",
-  good: "#1a7f37",
-  bad: "#cf222e",
-  chip: "#f0f2f5",
+  good: "#0b0b0b",
+  bad: "#b3261e",
+  chip: "#f3f3f3",
+};
+
+/**
+ * 제목·숫자용 서체. 웹은 index.html에서 불러온 Playfair Display(영문·숫자)와 Noto Serif KR(한글),
+ * iOS·Android 앱은 기본 세리프로 대체한다(새 의존성 없음).
+ */
+export const fonts = {
+  serif: Platform.select({
+    web: "'Playfair Display', 'Noto Serif KR', serif",
+    ios: "Georgia",
+    default: "serif",
+  }),
 };
 
 type ButtonProps = {
@@ -119,15 +132,17 @@ const styles = StyleSheet.create({
   buttonSecondary: {
     backgroundColor: colors.bg,
     borderWidth: 1,
-    borderColor: colors.line,
+    borderColor: colors.text,
   },
   buttonDanger: { backgroundColor: colors.bad },
-  buttonLabel: { color: colors.primaryText, fontSize: 16, fontWeight: "600" },
+  buttonLabel: { color: colors.primaryText, fontSize: 15, fontWeight: "500", letterSpacing: 1 },
   chip: {
     paddingVertical: 8,
     paddingHorizontal: 14,
-    borderRadius: 999,
-    backgroundColor: colors.chip,
+    borderRadius: 8,
+    backgroundColor: colors.bg,
+    borderWidth: 1,
+    borderColor: colors.text,
   },
   chipSelected: { backgroundColor: colors.primary },
   chipLabel: { fontSize: 15, color: colors.text },
@@ -142,10 +157,14 @@ const styles = StyleSheet.create({
   fieldCompact: { paddingVertical: 6, paddingHorizontal: 10, fontSize: 15 },
   row: { flexDirection: "row", flexWrap: "wrap", gap: 8, alignItems: "center" },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "700",
-    color: colors.sub,
-    marginTop: 16,
-    marginBottom: 6,
+    fontFamily: fonts.serif,
+    color: colors.text,
+    marginTop: 20,
+    marginBottom: 8,
+    paddingBottom: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.text,
   },
 });
