@@ -65,6 +65,6 @@ export default function PassageEditScreen() {
 
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: colors.bg },
-  content: { padding: 16, paddingBottom: 48 },
+  content: { padding: 24, paddingBottom: 48 },
   help: { color: colors.sub, marginBottom: 8 },
 });

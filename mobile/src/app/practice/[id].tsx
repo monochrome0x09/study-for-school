@@ -99,6 +99,6 @@ export default function PracticeScreen() {
 
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: colors.bg },
-  content: { padding: 16, paddingBottom: 64 },
+  content: { padding: 24, paddingBottom: 64 },
   error: { color: colors.bad, padding: 8 },
 });

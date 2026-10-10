@@ -3,7 +3,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { useCallback } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { Button, colors, fonts } from "@/components/ui";
+import { Button, colors, fonts, liningNums } from "@/components/ui";
 import { listPassages } from "@/db/passages";
 import { useFocusLoad } from "@/hooks/useFocusLoad";
 import { passageTitle, pickContinue } from "@/lib/passage";
@@ -55,14 +55,15 @@ export default function HomeScreen() {
       </View>
       {nextReview ? <Text style={styles.review}>{nextReview}</Text> : null}
 
+      <View style={{ flex: 1, minHeight: 24 }} />
       {next ? (
         <Button
           label="이어서 암기하기"
           onPress={() => router.push({ pathname: "/practice/[id]", params: { id: String(next.id) } })}
-          style={{ marginTop: 28 }}
+          
         />
       ) : (
-        <Button label="지문 보러 가기" onPress={() => router.push("/passages")} style={{ marginTop: 28 }} />
+        <Button label="지문 보러 가기" onPress={() => router.push("/passages")} />
       )}
       {next ? (
         <Text style={styles.nextHint}>
@@ -75,13 +76,13 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: 28, paddingTop: 8, paddingBottom: 48 },
+  content: { flexGrow: 1, padding: 24, paddingTop: 8, paddingBottom: 32 },
   rule: { height: 1, backgroundColor: colors.text, marginBottom: 20 },
   label: { fontFamily: fonts.serif, fontSize: 11, letterSpacing: 4, color: colors.sub },
-  dday: { fontFamily: fonts.serif, fontSize: 112, fontWeight: "900", lineHeight: 124, color: colors.text, letterSpacing: -4 },
-  sub: { color: colors.sub, fontSize: 12, fontWeight: "300" },
-  progressHead: { flexDirection: "row", justifyContent: "space-between", alignItems: "baseline", marginTop: 28 },
-  count: { fontFamily: fonts.serif, fontSize: 18, fontWeight: "700", color: colors.text },
+  dday: { fontFamily: fonts.serif, ...liningNums, fontSize: 104, fontWeight: "900", lineHeight: 120, color: colors.text, letterSpacing: -3, marginTop: 4 },
+  sub: { color: colors.sub, fontSize: 12, fontWeight: "300", marginTop: 6 },
+  progressHead: { flexDirection: "row", justifyContent: "space-between", alignItems: "baseline", marginTop: 32 },
+  count: { fontFamily: fonts.serif, ...liningNums, fontSize: 18, fontWeight: "700", color: colors.text },
   track: { height: 2, backgroundColor: colors.line, marginTop: 8 },
   fill: { height: 2, backgroundColor: colors.text },
   review: { fontSize: 14, fontWeight: "500", color: colors.text, marginTop: 16 },

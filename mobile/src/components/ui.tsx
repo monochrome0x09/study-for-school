@@ -35,6 +35,9 @@ export const fonts = {
   }),
 };
 
+/** Playfair Display의 숫자는 기본이 아래로 내려가는 옛 서체 숫자라, 숫자는 줄에 맞는 모양으로 쓴다. */
+export const liningNums = { fontVariant: ["lining-nums" as const] };
+
 type ButtonProps = {
   label: string;
   onPress: () => void;
@@ -161,7 +164,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontFamily: fonts.serif,
     color: colors.text,
-    marginTop: 20,
+    marginTop: 16,
     marginBottom: 8,
     paddingBottom: 6,
     borderBottomWidth: 1,

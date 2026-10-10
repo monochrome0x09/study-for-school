@@ -147,7 +147,7 @@ export default function PassageDetailScreen() {
 
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: colors.bg },
-  content: { padding: 16, paddingBottom: 48 },
+  content: { padding: 24, paddingBottom: 48 },
   meta: { color: colors.sub, marginBottom: 12 },
   error: { color: colors.bad, padding: 16 },
   panel: {

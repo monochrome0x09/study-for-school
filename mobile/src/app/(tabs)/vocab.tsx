@@ -48,7 +48,7 @@ export default function VocabScreen() {
   const items = data ?? [];
   return (
     <View style={styles.page}>
-      <View style={{ padding: 16 }}>
+      <View style={{ padding: 24, paddingTop: 8 }}>
         <Button
           label={`카드 복습 (${items.length}개)`}
           disabled={items.length === 0}
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.line,
   },

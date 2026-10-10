@@ -141,7 +141,7 @@ export default function ImportScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: 16, paddingBottom: 48 },
+  content: { padding: 24, paddingBottom: 48 },
   help: { color: colors.sub, marginVertical: 8 },
   box: { minHeight: 200 },
   line: { fontSize: 16, color: colors.text, marginBottom: 4 },
