@@ -147,7 +147,7 @@ export default function PassageNewScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: 16, paddingBottom: 48 },
+  content: { padding: 24, paddingBottom: 48 },
   input: { marginBottom: 8 },
   short: { minWidth: 90 },
   body: { minHeight: 220 },

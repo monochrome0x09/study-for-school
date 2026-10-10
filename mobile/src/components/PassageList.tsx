@@ -5,7 +5,7 @@ import { passageTitle } from "@/lib/passage";
 
 import { LEVELS } from "@/lib/level";
 
-import { colors, fonts } from "./ui";
+import { colors, fonts, liningNums } from "./ui";
 
 type Props = {
   items: PassageListItem[];
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.line,
     backgroundColor: colors.bg,
   },
-  no: { width: 36, fontFamily: fonts.serif, fontSize: 22, color: "#9a9a9a" },
+  no: { width: 36, fontFamily: fonts.serif, ...liningNums, fontSize: 22, color: "#9a9a9a" },
   title: { fontSize: 15, fontWeight: "500", color: colors.text },
   meta: { fontSize: 12, fontWeight: "300", color: colors.sub, marginTop: 2 },
   levels: { flexDirection: "row", gap: 3 },

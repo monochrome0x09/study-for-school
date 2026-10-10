@@ -9,11 +9,14 @@ export default function TabsLayout() {
         headerShadowVisible: false,
         headerStyle: { backgroundColor: colors.bg },
         headerTitleAlign: "left",
+        // 화면 본문의 좌우 여백(24)과 제목 시작 위치를 맞춘다
+        headerTitleContainerStyle: { paddingLeft: 8 },
         headerTitleStyle: { fontFamily: fonts.serif, fontWeight: "700", fontSize: 22, color: colors.text },
         tabBarActiveTintColor: colors.text,
         tabBarInactiveTintColor: "#8a8a8a",
-        tabBarLabelStyle: { fontFamily: fonts.serif, fontSize: 13 },
+        tabBarLabelStyle: { fontFamily: fonts.serif, fontSize: 13, marginTop: 0 },
         tabBarIconStyle: { display: "none" },
+        tabBarItemStyle: { justifyContent: "center" },
         tabBarStyle: { borderTopColor: colors.text, borderTopWidth: 1 },
       }}
     >

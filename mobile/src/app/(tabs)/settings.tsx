@@ -70,6 +70,6 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: 16, paddingBottom: 48 },
+  content: { padding: 24, paddingBottom: 48 },
   saved: { color: colors.good, marginTop: 8 },
 });
